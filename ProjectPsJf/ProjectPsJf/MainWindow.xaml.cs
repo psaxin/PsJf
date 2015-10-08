@@ -65,6 +65,8 @@ namespace ProjectPsJf
             catch (System.Net.WebException)
             {
                 MessageBox.Show("URL fungerade ej");
+
+                // denna metod är ännu inte kommenterad.
                 
             }
         }
