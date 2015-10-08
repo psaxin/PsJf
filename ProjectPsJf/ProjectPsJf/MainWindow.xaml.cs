@@ -66,7 +66,7 @@ namespace ProjectPsJf
             {
                 MessageBox.Show("URL fungerade ej");
 
-                // denna metod är ännu inte kommenterad.
+             //TOG BORT KOMMENTAREN
                 
             }
         }
