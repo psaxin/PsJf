@@ -123,7 +123,16 @@ namespace ProjectPsJf
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Play();
+            string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
+            if (mediaPlayer.Source.ToString() == chosenFile)
+            {
+                mediaPlayer.Play();
+                
+            }
+            else {
+                playMedia(chosenFile);
+            }
+            
         }
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
@@ -138,8 +147,9 @@ namespace ProjectPsJf
 
         void timer_Tick(object sender, EventArgs e)
         {
+            // , mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss")
             if (mediaPlayer.Source != null)
-                lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"mm\:ss"), mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+                lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"mm\:ss"), "Under konstruktion...");
             else
                 lblStatus.Content = "No file selected...";
         }
