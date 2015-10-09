@@ -7,12 +7,11 @@ using System.Xml.Linq;
 
 namespace ProjectPsJf
 {
+    //denna klass finns mest för att experimentera i för tillfället
      class Class1
 
 
     {
-       
-     
         public int x;
         public int y;
 

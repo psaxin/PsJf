@@ -10,7 +10,7 @@ namespace ProjectPsJf
     public class listViewItems
     {
         public string Title { get; set; }
-
         public string Date { get; set; }
+        public string URL { get; set; }
     }
 }

@@ -15,6 +15,9 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.Data;
 using System.ComponentModel;
+using Microsoft.Win32;
+using System.Windows.Threading;
+using System.Collections.ObjectModel;
 
 namespace ProjectPsJf
 {
@@ -23,13 +26,16 @@ namespace ProjectPsJf
     /// </summary>
     public partial class MainWindow : Window
     {
+        // denna kodrad kommer behövas senare
+        //private ObservableCollection<listViewItems> minLista = new ObservableCollection<listViewItems>();
+        private MediaPlayer mediaPlayer = new MediaPlayer();
 
-       
         public MainWindow()
         {
             InitializeComponent();
-            //skapar columner till listViewDetails. Detta kanske vi kan skapa direkt i designern..
+            //skapar columner till listViewDetails. Detta kan vi kan skapa direkt i designern..
             initializeGrid();
+            
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -53,6 +59,7 @@ namespace ProjectPsJf
                                
                                      title = x.Element("title").Value,
                                      pubDate = x.Element("pubDate").Value,
+                                     url = (string) x.Element("enclosure").Attribute("url").Value,
                              });
                 //så länge items inte är tom..
                 if (items != null)
@@ -63,7 +70,8 @@ namespace ProjectPsJf
                     foreach (var i in items)
                     {
                         //lägger till i listen
-                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title , Date = i.pubDate });          
+                        //Console.WriteLine(i.url);
+                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title , Date = i.pubDate, URL = i.url });          
                         //listViewDetails.Items.Add.(i.title);
                     }
                 }
@@ -90,31 +98,7 @@ namespace ProjectPsJf
                 button.IsEnabled = true;
             }
         }
-
-        //DENNA KOD KANSKE BEHÖVS SENARE
-        //private void initializeGrid() {
-        //    GridView myGridView = new GridView();
-        //    myGridView.AllowsColumnReorder = true;
-        //    myGridView.ColumnHeaderToolTip = "Employee Information";
-        //    GridViewColumn gvc1 = new GridViewColumn();
-        //    gvc1.DisplayMemberBinding = new Binding("Avsnitt");
-        //    gvc1.Header = "Avsnitt";
-        //    gvc1.Width = 100;
-        //    myGridView.Columns.Add(gvc1);
-        //    GridViewColumn gvc2 = new GridViewColumn();
-        //    gvc2.DisplayMemberBinding = new Binding("Titel");
-        //    gvc2.Header = "Titel";
-        //    gvc2.Width = 100;
-        //    myGridView.Columns.Add(gvc2);
-        //    GridViewColumn gvc3 = new GridViewColumn();
-        //    gvc3.DisplayMemberBinding = new Binding("Övrigt");
-        //    gvc3.Header = "Övrigt";
-        //    gvc3.Width = 100;
-        //    myGridView.Columns.Add(gvc3);
-        //    //myGridView.SetValue(gvc1, "dd");
-        //    listViewDetails.View = myGridView;
-        //}
-
+            // denna ska byggas om. Direkt i XAML istället
         private void initializeGrid()
         {
             var gridview = new GridView();
@@ -132,5 +116,48 @@ namespace ProjectPsJf
             });
         }
 
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Play();
+        }
+
+        private void btnPause_Click(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Pause();
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Stop();
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            if (mediaPlayer.Source != null)
+                lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"mm\:ss"), mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+            else
+                lblStatus.Content = "No file selected...";
+        }
+
+        private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
+            playMedia(chosenFile);
+          
+        }
+
+        private void playMedia(string file) {
+            mediaPlayer.Open(new Uri(file));
+            mediaPlayer.Play();
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_Tick;
+            timer.Start();
+        }
     }
-    }
+}

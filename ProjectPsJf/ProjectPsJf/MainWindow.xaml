@@ -7,18 +7,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="572.549" Width="777.941">
     <Grid>
-        <Label x:Name="label" Content="Ange URL:" HorizontalAlignment="Left" Margin="52,75,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Hämta" HorizontalAlignment="Left" Margin="408,78,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
-        <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="105" Margin="504,376,0,0" VerticalAlignment="Top" Width="228"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="117,78,0,0" TextWrapping="Wrap" Text="http://tackforkaffet.libsyn.com/rss" VerticalAlignment="Top" Width="264" KeyUp="textBox_KeyUp"/>
-        <Label x:Name="lblSavedFeeds" Content="Sparade Feeds" HorizontalAlignment="Left" Margin="504,350,0,0" VerticalAlignment="Top"/>
-        <ListView x:Name="listViewDetails" HorizontalAlignment="Left" Height="321" Margin="25,160,0,0" VerticalAlignment="Top" Width="458">
+        <Label x:Name="label" Content="Ange URL:" HorizontalAlignment="Left" Margin="21,28,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button" Content="Hämta" HorizontalAlignment="Left" Margin="373,29,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+        <ListBox x:Name="listBox1" HorizontalAlignment="Left" Height="128" Margin="504,54,0,0" VerticalAlignment="Top" Width="228"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="91,28,0,0" TextWrapping="Wrap" Text="http://tackforkaffet.libsyn.com/rss" VerticalAlignment="Top" Width="264" KeyUp="textBox_KeyUp"/>
+        <Label x:Name="lblSavedFeeds" Content="Sparade Feeds" HorizontalAlignment="Left" Margin="504,29,0,0" VerticalAlignment="Top"/>
+        <ListView x:Name="listViewDetails" HorizontalAlignment="Left" Height="301" Margin="21,54,0,0" VerticalAlignment="Top" Width="458" MouseDoubleClick="listViewDetails_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <Button x:Name="button1" Content="Button" HorizontalAlignment="Left" Margin="602,187,0,0" VerticalAlignment="Top" Width="75" Click="button1_Click"/>
+        <Rectangle x:Name="mediaBg" HorizontalAlignment="Left" Height="128" Margin="21,383,0,0" Stroke="Black" VerticalAlignment="Top" Width="458" Fill="#FF6A8DB8"/>
+        <Label x:Name="lblMediaPlayer" Content="Podcast Spelare" HorizontalAlignment="Left" Margin="21,360,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnPlay" Content="Spela" HorizontalAlignment="Left" Margin="58,476,0,0" VerticalAlignment="Top" Width="75" Click="btnPlay_Click"/>
+        <Button x:Name="btnPause" Content="Pausa" HorizontalAlignment="Left" Margin="155,476,0,0" VerticalAlignment="Top" Width="75" Click="btnPause_Click"/>
+        <Button x:Name="btnStop" Content="Stopp" HorizontalAlignment="Left" Margin="246,476,0,0" VerticalAlignment="Top" Width="75" Click="btnStop_Click"/>
+        <Label x:Name="lblStatus" Content="Tid:" HorizontalAlignment="Left" Margin="91,418,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblFileName" Content="under konstruktion!!! //  dubbel klicka på en pod för att spela" HorizontalAlignment="Left" Margin="91,392,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
