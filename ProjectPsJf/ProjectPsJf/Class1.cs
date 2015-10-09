@@ -7,11 +7,35 @@ using System.Xml.Linq;
 
 namespace ProjectPsJf
 {
-    class Class1
+     class Class1
+
+
     {
+       
+     
+        public int x;
+        public int y;
+
+        public void setXY(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        public int getX()
+        {
+            return x;
+        }
+        public int getY()
+        {
+            return y;
+        }
+
         public void test()
         {
-            //denna klass används inte än
         }
+
     }
-}
+
+
+    
+    }

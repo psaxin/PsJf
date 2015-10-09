@@ -23,9 +23,13 @@ namespace ProjectPsJf
     /// </summary>
     public partial class MainWindow : Window
     {
+
+       
         public MainWindow()
         {
             InitializeComponent();
+            //skapar columner till listViewDetails. Detta kanske vi kan skapa direkt i designern..
+            initializeGrid();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -36,6 +40,7 @@ namespace ProjectPsJf
         public void fyllLista() {
             //hämtar text från textBox
             string rssUrl = textBox.Text;
+
             try
             {
                 XDocument xDoc = new XDocument();
@@ -45,32 +50,87 @@ namespace ProjectPsJf
                              select new
                              {
                                  // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
-                                 title = x.Element("title").Value,
+                               
+                                     title = x.Element("title").Value,
+                                     pubDate = x.Element("pubDate").Value,
                              });
                 //så länge items inte är tom..
                 if (items != null)
                 {
                     //tömmer listboxen
-                    listBox1.Items.Clear();
-                    //loopar igenom alla objekt (alltså "i") i items.
+                    listViewDetails.Items.Clear();
+                    //loopar igenom alla objekt i items.
                     foreach (var i in items)
                     {
-                        //lägger till i listboxen
-                        listBox1.Items.Add(i.title);
+                        //lägger till i listen
+                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title , Date = i.pubDate });          
+                        //listViewDetails.Items.Add.(i.title);
                     }
                 }
 
             }
-       
+
             catch (System.Net.WebException)
             {
                 MessageBox.Show("URL fungerade ej");
 
-             //TOG BORT KOMMENTAREN
-                
+            }
+            
+        }
+
+        // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
+        private void textBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            //testar validator klassen
+            if (textBox.Text.isEmpty())
+            {
+                button.IsEnabled = false;
+            }
+            else {
+                button.IsEnabled = true;
             }
         }
 
+        //DENNA KOD KANSKE BEHÖVS SENARE
+        //private void initializeGrid() {
+        //    GridView myGridView = new GridView();
+        //    myGridView.AllowsColumnReorder = true;
+        //    myGridView.ColumnHeaderToolTip = "Employee Information";
+        //    GridViewColumn gvc1 = new GridViewColumn();
+        //    gvc1.DisplayMemberBinding = new Binding("Avsnitt");
+        //    gvc1.Header = "Avsnitt";
+        //    gvc1.Width = 100;
+        //    myGridView.Columns.Add(gvc1);
+        //    GridViewColumn gvc2 = new GridViewColumn();
+        //    gvc2.DisplayMemberBinding = new Binding("Titel");
+        //    gvc2.Header = "Titel";
+        //    gvc2.Width = 100;
+        //    myGridView.Columns.Add(gvc2);
+        //    GridViewColumn gvc3 = new GridViewColumn();
+        //    gvc3.DisplayMemberBinding = new Binding("Övrigt");
+        //    gvc3.Header = "Övrigt";
+        //    gvc3.Width = 100;
+        //    myGridView.Columns.Add(gvc3);
+        //    //myGridView.SetValue(gvc1, "dd");
+        //    listViewDetails.View = myGridView;
+        //}
+
+        private void initializeGrid()
+        {
+            var gridview = new GridView();
+            this.listViewDetails.View = gridview;
+            gridview.Columns.Add(new GridViewColumn
+            {
+                Header = "Title",
+                DisplayMemberBinding = new Binding("Title"),
+                Width = 150,
+            });
+            gridview.Columns.Add(new GridViewColumn
+            {
+                Header = "Date",
+                DisplayMemberBinding = new Binding("Date")
+            });
+        }
 
     }
     }
