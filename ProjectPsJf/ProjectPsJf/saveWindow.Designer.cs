@@ -52,6 +52,7 @@
             // tbKat
             // 
             this.tbKat.Location = new System.Drawing.Point(26, 98);
+            this.tbKat.MaxLength = 15;
             this.tbKat.Name = "tbKat";
             this.tbKat.Size = new System.Drawing.Size(100, 20);
             this.tbKat.TabIndex = 5;
@@ -68,6 +69,7 @@
             // tbUppd
             // 
             this.tbUppd.Location = new System.Drawing.Point(26, 137);
+            this.tbUppd.MaxLength = 1000;
             this.tbUppd.Name = "tbUppd";
             this.tbUppd.Size = new System.Drawing.Size(100, 20);
             this.tbUppd.TabIndex = 7;
@@ -103,6 +105,7 @@
             // tbNamn
             // 
             this.tbNamn.Location = new System.Drawing.Point(26, 59);
+            this.tbNamn.MaxLength = 15;
             this.tbNamn.Name = "tbNamn";
             this.tbNamn.Size = new System.Drawing.Size(100, 20);
             this.tbNamn.TabIndex = 10;
@@ -139,13 +142,13 @@
       
      
         private System.Windows.Forms.Label lblNamn;
-        private System.Windows.Forms.TextBox tbKat;
+        public System.Windows.Forms.TextBox tbKat;
         private System.Windows.Forms.Label lblKat;
-        private System.Windows.Forms.TextBox tbUppd;
+        public System.Windows.Forms.TextBox tbUppd;
         private System.Windows.Forms.Label lblUppd;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnSpara;
-        private System.Windows.Forms.TextBox tbNamn;
+        public System.Windows.Forms.TextBox tbNamn;
         private System.Windows.Forms.Label lblUrl;
     }
 }

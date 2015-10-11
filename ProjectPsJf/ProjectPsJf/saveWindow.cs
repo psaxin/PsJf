@@ -13,11 +13,11 @@ namespace ProjectPsJf
 {
     public partial class saveWindow : Form
     {
+        private MainWindow mainForm;
       
-
-        public saveWindow (String url, XDocument xDoc): this()
+        public saveWindow (String url, MainWindow main): this()
         {
-            
+            mainForm =  main;
             lblUrl.Text += " " + url;
 
         }
@@ -30,8 +30,8 @@ namespace ProjectPsJf
 
         private void btnSpara_Click(object sender, EventArgs e)
         {
-
-           
+            
+            mainForm.addToListBox(this);
             this.Dispose();
 
         }

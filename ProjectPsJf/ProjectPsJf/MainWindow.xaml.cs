@@ -117,12 +117,14 @@ namespace ProjectPsJf
                 Header = "Date",
                 DisplayMemberBinding = new Binding("Date")
             });
+
+            
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
 
-            saveWindow saveWin = new saveWindow(textBox.Text, xDoc);
+            saveWindow saveWin = new saveWindow(textBox.Text, this);
             saveWin.Show();
 
 
@@ -178,10 +180,18 @@ namespace ProjectPsJf
             timer.Start();
         }
 
-        protected void addToListBox(String feed)
+        public void addToListBox(saveWindow save)
         {
+             String feed = "";
+             feed += save.tbNamn.Text;
+             feed += save.tbKat.Text;
+             feed += save.tbUppd.Text;
+             XDocument saveDoc = new XDocument();
+             saveDoc = XDocument.Load(feed);
 
-            lbFeed.Items.Add(feed);
+            lwFeed.Items.Add(new { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
+
+            //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
 
         }
 
