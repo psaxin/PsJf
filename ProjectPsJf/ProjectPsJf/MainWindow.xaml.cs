@@ -186,11 +186,14 @@ namespace ProjectPsJf
              feed += save.tbNamn.Text;
              feed += save.tbKat.Text;
              feed += save.tbUppd.Text;
-             XDocument saveDoc = new XDocument();
-             saveDoc = XDocument.Load(feed);
+             //XDocument saveDoc = new XDocument();
+             //saveDoc = XDocument.Load(feed);
+
 
             lwFeed.Items.Add(new { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
+            
 
+             xDoc.Save(@"savedFeeds/" + save.tbNamn.Text + ".txt");
             //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
 
         }
