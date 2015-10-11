@@ -47,7 +47,7 @@ namespace ProjectPsJf
         }
 
         public void fyllLista() {
-            //hämtar text från textBox.
+            //hämtar text från textBox
             string rssUrl = textBox.Text;
 
             try
