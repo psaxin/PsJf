@@ -24,11 +24,14 @@ namespace ProjectPsJf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+
     public partial class MainWindow : Window
     {
         // denna kodrad kommer behövas senare
         //private ObservableCollection<listViewItems> minLista = new ObservableCollection<listViewItems>();
         private MediaPlayer mediaPlayer = new MediaPlayer();
+        private XDocument xDoc = new XDocument();
 
         public MainWindow()
         {
@@ -49,7 +52,7 @@ namespace ProjectPsJf
 
             try
             {
-                XDocument xDoc = new XDocument();
+                
                 xDoc = XDocument.Load(rssUrl);
                 //hämtar ut element från xDoc till en lista av objekt
                 var items = (from x in xDoc.Descendants("item")
@@ -116,13 +119,17 @@ namespace ProjectPsJf
             });
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+
+            saveWindow saveWin = new saveWindow(textBox.Text, xDoc);
+            saveWin.Show();
+
 
         }
-
-        private void btnPlay_Click(object sender, RoutedEventArgs e)
-        {
+     
+       private void btnPlay_Click(object sender, RoutedEventArgs e)
+        {/*
             string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
             if (mediaPlayer.Source.ToString() == chosenFile)
             {
@@ -132,8 +139,9 @@ namespace ProjectPsJf
             else {
                 playMedia(chosenFile);
             }
-            
+              * */
         }
+      
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
@@ -169,5 +177,14 @@ namespace ProjectPsJf
             timer.Tick += timer_Tick;
             timer.Start();
         }
+
+        protected void addToListBox(String feed)
+        {
+
+            lbFeed.Items.Add(feed);
+
+        }
+
+
     }
 }
