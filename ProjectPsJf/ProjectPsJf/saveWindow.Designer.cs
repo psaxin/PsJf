@@ -51,11 +51,12 @@
             // 
             // tbKat
             // 
+            this.tbKat.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.tbKat.Location = new System.Drawing.Point(26, 98);
             this.tbKat.MaxLength = 15;
             this.tbKat.Name = "tbKat";
             this.tbKat.Size = new System.Drawing.Size(100, 20);
-            this.tbKat.TabIndex = 5;
+            this.tbKat.TabIndex = 1;
             // 
             // lblKat
             // 
@@ -72,7 +73,7 @@
             this.tbUppd.MaxLength = 1000;
             this.tbUppd.Name = "tbUppd";
             this.tbUppd.Size = new System.Drawing.Size(100, 20);
-            this.tbUppd.TabIndex = 7;
+            this.tbUppd.TabIndex = 2;
             // 
             // lblUppd
             // 
@@ -97,7 +98,7 @@
             this.btnSpara.Location = new System.Drawing.Point(26, 179);
             this.btnSpara.Name = "btnSpara";
             this.btnSpara.Size = new System.Drawing.Size(75, 23);
-            this.btnSpara.TabIndex = 9;
+            this.btnSpara.TabIndex = 3;
             this.btnSpara.Text = "Spara";
             this.btnSpara.UseVisualStyleBackColor = true;
             this.btnSpara.Click += new System.EventHandler(this.btnSpara_Click);
@@ -108,7 +109,7 @@
             this.tbNamn.MaxLength = 15;
             this.tbNamn.Name = "tbNamn";
             this.tbNamn.Size = new System.Drawing.Size(100, 20);
-            this.tbNamn.TabIndex = 10;
+            this.tbNamn.TabIndex = 0;
             // 
             // lblUrl
             // 
@@ -116,7 +117,7 @@
             this.lblUrl.Location = new System.Drawing.Point(23, 21);
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(32, 13);
-            this.lblUrl.TabIndex = 11;
+            this.lblUrl.TabIndex = 0;
             this.lblUrl.Text = "URL;";
             // 
             // saveWindow
