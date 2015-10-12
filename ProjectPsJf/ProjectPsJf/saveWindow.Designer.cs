@@ -70,7 +70,7 @@
             // tbUppd
             // 
             this.tbUppd.Location = new System.Drawing.Point(26, 137);
-            this.tbUppd.MaxLength = 1000;
+            this.tbUppd.MaxLength = 4;
             this.tbUppd.Name = "tbUppd";
             this.tbUppd.Size = new System.Drawing.Size(100, 20);
             this.tbUppd.TabIndex = 2;

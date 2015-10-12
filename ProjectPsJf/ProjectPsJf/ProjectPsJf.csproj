@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConvertRss.cs" />
     <Compile Include="createSaveFile.cs" />
     <Compile Include="listViewItems.cs" />
     <Compile Include="Mp3Player.cs" />

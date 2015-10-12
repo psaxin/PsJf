@@ -33,17 +33,16 @@ namespace ProjectPsJf
         //private ObservableCollection<listViewItems> minLista = new ObservableCollection<listViewItems>();
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private XDocument xDoc = new XDocument();
-
+        private string currentFile ="";
         public object MathHelper { get; private set; }
+        DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow()
         {
             InitializeComponent();
             //skapar columner till listViewDetails. Detta kan vi kan skapa direkt i designern..
-            initializeGrid();
-            updateSavedFeeds();
-            
-            
+             updateSavedFeeds();
+ 
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -57,35 +56,15 @@ namespace ProjectPsJf
 
             try
             {
+                Array items = ConvertRss.toXml(rssUrl);
                 
-                xDoc = XDocument.Load(rssUrl);
-                //hämtar ut element från xDoc till en lista av objekt
-                var items = (from x in xDoc.Descendants("item")
-                             select new
-                             {
-                                 // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
-                               
-                                     title = x.Element("title").Value,
-                                     pubDate = x.Element("pubDate").Value,
-                                     url = (string) x.Element("enclosure").Attribute("url").Value,
-                             });
-                //så länge items inte är tom..
-                if (items != null)
+                foreach (var i in items)
                 {
-                    //tömmer listboxen
-                    listViewDetails.Items.Clear();
-                    //loopar igenom alla objekt i items.
-                    foreach (var i in items)
-                    {
-                        //lägger till i listen
-                        //Console.WriteLine(i.url);
-                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title , Date = i.pubDate, URL = i.url });          
-                        //listViewDetails.Items.Add.(i.title);
-                    }
+                    this.listViewDetails.Items.Add(i);
+                  
                 }
-
+               
             }
-
             catch (System.Net.WebException)
             {
                 MessageBox.Show("URL fungerade ej");
@@ -106,25 +85,6 @@ namespace ProjectPsJf
                 button.IsEnabled = true;
             }
         }
-            // denna ska byggas om. Direkt i XAML istället
-        private void initializeGrid()
-        {
-            var gridview = new GridView();
-            this.listViewDetails.View = gridview;
-            gridview.Columns.Add(new GridViewColumn
-            {
-                Header = "Title",
-                DisplayMemberBinding = new Binding("Title"),
-                Width = 150,
-            });
-            gridview.Columns.Add(new GridViewColumn
-            {
-                Header = "Date",
-                DisplayMemberBinding = new Binding("Date")
-            });
-
-            
-        }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -136,17 +96,12 @@ namespace ProjectPsJf
         }
      
        private void btnPlay_Click(object sender, RoutedEventArgs e)
-        {/*
-            string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
-            if (mediaPlayer.Source.ToString() == chosenFile)
-            {
-                mediaPlayer.Play();
-                
-            }
-            else {
-                playMedia(chosenFile);
-            }
-              * */
+        {
+
+            
+            playMedia((listViewDetails.SelectedItem as listViewItems).URL);
+         
+              
         }
       
 
@@ -177,12 +132,25 @@ namespace ProjectPsJf
         }
 
         private void playMedia(string file) {
-            mediaPlayer.Open(new Uri(file));
+            
+            if (file != currentFile) 
+            {
+                mediaPlayer.Open(new Uri(file));
+                mediaPlayer.Play();
+                currentFile = file;
+                
+                timer.Interval = TimeSpan.FromSeconds(1);
+                timer.Tick += timer_Tick;
+                timer.Start();
+            }
+            
+
+            else { 
             mediaPlayer.Play();
-            DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timer_Tick;
             timer.Start();
+            }
         }
 
         public void addToListBox(saveWindow save)
@@ -207,6 +175,7 @@ namespace ProjectPsJf
             string path = @"savedFeeds/" + name + ".xml";
             createSaveFile.create(name,path,kat,frek);
             xDoc.Save(@"savedFeeds/src/" + name + ".xml");
+            Console.WriteLine((listViewDetails.SelectedItem as listViewItems).URL);
         }
 
         private void updateFeed(string chosenFile) {
@@ -259,40 +228,7 @@ namespace ProjectPsJf
             
         }
 
-        private void btnRemoveSaved_Click(object sender, RoutedEventArgs e)
-        {
-            
-            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-            string path = @"savedFeeds/" + chosenFile + ".XML";
-            string pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
-            Console.WriteLine(path);
-            Console.WriteLine(pathSrc);
-            try {
-                if (File.Exists(path))
-                {
-                    Console.WriteLine("filen finns!!!");
-                    File.Delete(path);
-                    File.Delete(pathSrc);
-                }
-                else
-                {
-                    Console.WriteLine("filen finns ej");
-                }
-            }
-            catch (Exception re){
-
-                Console.WriteLine(re);
-            }
-            updateSavedFeeds();
-
-        }
-
-        private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            float newVolume = (float)(Math.Sqrt(slider.Value) / 10);
-            mediaPlayer.Volume = newVolume;
-        }
-
+       
         private void updateSavedFeeds() {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
@@ -330,5 +266,59 @@ namespace ProjectPsJf
                 //lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
             }
         }
+
+        private void slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+            float newVolume = (float)(Math.Sqrt(slider.Value) / 10);
+            mediaPlayer.Volume = newVolume;
+
+        }
+
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+
+            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+            string path = @"savedFeeds/" + chosenFile + ".XML";
+            string pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
+            Console.WriteLine(path);
+            Console.WriteLine(pathSrc);
+            try
+            {
+                if (File.Exists(path))
+                {
+                    Console.WriteLine("filen finns!!!");
+                    File.Delete(path);
+                    File.Delete(pathSrc);
+                }
+                else
+                {
+                    Console.WriteLine("filen finns ej");
+                }
+            }
+            catch (Exception re)
+            {
+
+                Console.WriteLine(re);
+            }
+            updateSavedFeeds();
+
+        }
+
+        private void listViewDetails_GotMouseCapture(object sender, MouseEventArgs e)
+        {
+           
+            btnPlay.IsEnabled = true;
+            //chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
+           
+        }
+
+        private void listViewDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        
+            btnPlay.IsEnabled = true;
+        }
+
+  
     }
 }
