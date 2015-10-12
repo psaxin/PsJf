@@ -45,7 +45,7 @@ namespace ProjectPsJf
             element1.AppendChild(element5);
 
             
-            doc.Save(@"savedFeeds / " +name + ".xml");
+            doc.Save(@"savedFeeds/" +name + ".xml");
         }
 
     }

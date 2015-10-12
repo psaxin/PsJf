@@ -41,7 +41,7 @@ namespace ProjectPsJf
             InitializeComponent();
             //skapar columner till listViewDetails. Detta kan vi kan skapa direkt i designern..
             initializeGrid();
-            //updateSavedFeeds();
+            updateSavedFeeds();
             
             
         }
@@ -197,15 +197,15 @@ namespace ProjectPsJf
 
             lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
 
-            
-            //saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
+            //xDoc.Save(@"savedFeeds/src/" + save.tbNamn.Text + ".xml");
+            saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
             //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
 
         }
         private void saveFeed(string name, string kat, string frek) {
 
             string path = @"savedFeeds/" + name + ".xml";
-            //createSaveFile.create(name,path,kat,frek);
+            createSaveFile.create(name,path,kat,frek);
             xDoc.Save(@"savedFeeds/src/" + name + ".xml");
         }
 
@@ -263,19 +263,27 @@ namespace ProjectPsJf
         {
             
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-
-            string path = @"savedFeeds/src/" + chosenFile + ".xml";
+            string path = @"savedFeeds/" + chosenFile + ".XML";
+            string pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
             Console.WriteLine(path);
-            if (File.Exists(chosenFile))
-            {
-                Console.WriteLine("filen finns!!!");
-                File.Delete(chosenFile);
+            Console.WriteLine(pathSrc);
+            try {
+                if (File.Exists(path))
+                {
+                    Console.WriteLine("filen finns!!!");
+                    File.Delete(path);
+                    File.Delete(pathSrc);
+                }
+                else
+                {
+                    Console.WriteLine("filen finns ej");
+                }
             }
-            else
-            {
-                Console.WriteLine("filen finns ej");
-            }
+            catch (Exception re){
 
+                Console.WriteLine(re);
+            }
+            updateSavedFeeds();
 
         }
 
@@ -288,7 +296,7 @@ namespace ProjectPsJf
         private void updateSavedFeeds() {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
-
+            lwFeed.Items.Clear();
             foreach (string element in filePaths) {
                 try
                 {
@@ -308,8 +316,7 @@ namespace ProjectPsJf
                         foreach (var i in items)
                         {
                             lwFeed.Items.Add(new listViewItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek  });
-                            //this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url });
-                            //listViewDetails.Items.Add.(i.title);
+                       
                         }
                     }
 
