@@ -35,6 +35,7 @@ namespace ProjectPsJf
         private XDocument xDoc = new XDocument();
         private string currentFile ="";
         public object MathHelper { get; private set; }
+        private List<listViewItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow()
@@ -56,7 +57,7 @@ namespace ProjectPsJf
 
             try
             {
-                Array items = ConvertRss.toXml(rssUrl);
+                List<listViewItems> items = ConvertRss.toXml(rssUrl);
                 
                 foreach (var i in items)
                 {

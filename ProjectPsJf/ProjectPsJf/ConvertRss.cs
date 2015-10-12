@@ -10,13 +10,10 @@ namespace ProjectPsJf
     public class ConvertRss
     {
         private static XDocument xDoc = new XDocument();
-        private static Array xmlArray;
+        private static List<listViewItems> xmlList = new List<listViewItems>();
 
-        public static Array toXml(string url)
+        public static List<listViewItems> toXml(string url)
         {
-
-            int antal = 0;
-            int plats = 0;
 
             xDoc = XDocument.Load(url);
             //hämtar ut element från xDoc till en lista av objekt
@@ -32,33 +29,16 @@ namespace ProjectPsJf
 
             if (items != null)
             {
-                //tömmer listboxen
-
-                //loopar igenom alla objekt i items.
-
+                
                 foreach (var i in items)
                 {
+                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url });
 
-                    antal++;
-
-
-                }
-
-                xmlArray = new listViewItems[antal];
-
-                foreach (var i in items)
-                {
-                    
-                    //lägger till i listen
-                    //Console.WriteLine(i.url);
-                    xmlArray.SetValue((new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url }), plats);
-                    //listViewDetails.Items.Add.(i.title);
-                    plats++;
                 }
                
             }
 
-            return xmlArray;
+            return xmlList;
           
         }
         
