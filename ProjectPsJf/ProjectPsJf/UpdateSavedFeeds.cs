@@ -9,7 +9,7 @@ using System.Xml.Linq;
 using System.Timers;
 using System.Security.Permissions;
 using System.Xml;
-
+using System.Net;
 
 namespace ProjectPsJf
 {
@@ -39,8 +39,6 @@ namespace ProjectPsJf
                 frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
                 setUpdate(name, url, Int32.Parse(frekvens) * 1000);
                 //Console.WriteLine("Foreachen loopens värde" + name  + url  + Int32.Parse(frekvens) * 10000);
-                
-                
               
                 
             }
@@ -49,8 +47,8 @@ namespace ProjectPsJf
         }
 
         private void setUpdate(string namn, string url, int frekvens) {
-
-            var timer = new System.Timers.Timer(frekvens);
+            // GLÖM INTE FREKVENSEN!!!!
+            var timer = new System.Timers.Timer(10000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
 
@@ -69,33 +67,53 @@ namespace ProjectPsJf
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+           
+            string temp;
+            FileStream fs;
+            fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(fs);
+            temp = ParseRssFile("http://alexosigge.libsyn.com/rss");
+            writer.Write(temp);
+            writer.Flush();
+            Console.WriteLine("skrev");
+            writer.Close();
+            fs.Close();
 
-            save();
-            Console.WriteLine("Timern körs", e.SignalTime);
-        }
-
-        private void save()
-        {
-           System.Security.Permissions.FileIOPermissionAccess.Write
-            using (var fi = new System.IO.FileStream(filepath, System.IO.FileMode.Create))
-            {
-
-                using (var bw = new System.IO.BinaryWriter(fi, System.Text.Encoding.UTF8))
-                {
-                       tempXDoc = XDocument.Load(filepath);
-                       tempXDoc.Save(@"savedFeeds/src/" + name);
-                       bw.Flush();
-                       bw.Close();
-                }
-
-
-
-            }
-               
-            }
             
-              
         }
+
+
+        private string ParseRssFile(string urlin)
+        {
+            XmlDocument rssXmlDoc = new XmlDocument();
+
+            // Load the RSS file from the RSS URL
+            rssXmlDoc.Load(urlin);
+
+            // Parse the Items in the RSS file
+            XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
+
+            StringBuilder rssContent = new StringBuilder();
+
+            // Iterate through the items in the RSS file
+            foreach (XmlNode rssNode in rssNodes)
+            {
+                XmlNode rssSubNode = rssNode.SelectSingleNode("title");
+                string title = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                rssSubNode = rssNode.SelectSingleNode("link");
+                string link = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                rssSubNode = rssNode.SelectSingleNode("description");
+                string description = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                rssContent.Append("<a href='" + link + "'>" + title + "</a><br>" + description);
+            }
+
+            // Return the string that contain the RSS items
+            return rssContent.ToString();
+        }
+    }
 
        
     }
