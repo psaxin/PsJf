@@ -38,9 +38,11 @@ namespace ProjectPsJf
                 foreach (var frek in frekPath)
                 {
                     frekvens = HanteraRss.getFrek(frek);
-                    Console.WriteLine(name + "\n" + url + "\n" + Int32.Parse(frekvens));
+                    setUpdate(name, url, Int32.Parse(frekvens)*10000);
+                    Console.WriteLine(name + "\n" + url + "\n" + Int32.Parse(frekvens)*10000);
                 }
-                //setUpdate(name, url, Int32.Parse(frekvens));
+                
+              
                 
             }
 
@@ -54,19 +56,28 @@ namespace ProjectPsJf
 
         }
 
-        private void startUpdate(object x) {
+        private void startUpdate(object x)
+        {
 
-           
+
             // Don't do anything if the form's handle hasn't been created 
             // or the form has been disposed.
-            if (!this.IsHandleCreated && !this.IsDisposed) return;
-            // Invoke an anonymous method on the thread of the form.
-            this.Invoke((MethodInvoker)delegate
+            if (!this.IsHandleCreated && !this.IsDisposed)
             {
-                tempXDoc = XDocument.Load(filepath);
-                tempXDoc.Save(@"savedFeeds/src/" + name + ".xml");
+                Console.WriteLine("ifen körs");
 
-        });
+            }
+            // Invoke an anonymous method on the thread of the form.
+            else
+            {
+                this.Invoke((MethodInvoker)delegate
+            {
+                Console.WriteLine("Körs");
+                tempXDoc = XDocument.Load(filepath);
+                tempXDoc.Save(@"savedFeeds/src/" + name);
+            });
+
+            }
         }
 
         private string getName(string path) {
