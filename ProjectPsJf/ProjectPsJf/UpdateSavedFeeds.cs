@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using System.Timers;
+using System.Security.Permissions;
+using System.Xml;
 
 
 namespace ProjectPsJf
@@ -22,25 +25,21 @@ namespace ProjectPsJf
         public UpdateSavedFeeds() {
             
             checkFeeds();
-        
             //startUpdate();
         }
 
         private void checkFeeds() {
             //savedFeeds\src\alexosigge.xml
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
-            string[] frekPath = Directory.GetFiles(@"savedFeeds\");
-
+            
             foreach (var element in filePaths) {
                 url = HanteraRss.getURL(element);
                 filepath = element;
                 name = getName(element);
-                foreach (var frek in frekPath)
-                {
-                    frekvens = HanteraRss.getFrek(frek);
-                    setUpdate(name, url, Int32.Parse(frekvens)*10000);
-                    Console.WriteLine(name + "\n" + url + "\n" + Int32.Parse(frekvens)*10000);
-                }
+                frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
+                setUpdate(name, url, Int32.Parse(frekvens) * 1000);
+                //Console.WriteLine("Foreachen loopens värde" + name  + url  + Int32.Parse(frekvens) * 10000);
+                
                 
               
                 
@@ -50,35 +49,15 @@ namespace ProjectPsJf
         }
 
         private void setUpdate(string namn, string url, int frekvens) {
- 
 
-            var Timer = new System.Threading.Timer(startUpdate, null, 0, frekvens);
+            var timer = new System.Timers.Timer(frekvens);
+            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            timer.Enabled = true;
 
         }
 
-        private void startUpdate(object x)
-        {
-
-
-            // Don't do anything if the form's handle hasn't been created 
-            // or the form has been disposed.
-            if (!this.IsHandleCreated && !this.IsDisposed)
-            {
-                Console.WriteLine("ifen körs");
-
-            }
-            // Invoke an anonymous method on the thread of the form.
-            else
-            {
-                this.Invoke((MethodInvoker)delegate
-            {
-                Console.WriteLine("Körs");
-                tempXDoc = XDocument.Load(filepath);
-                tempXDoc.Save(@"savedFeeds/src/" + name);
-            });
-
-            }
-        }
+       
+        
 
         private string getName(string path) {
             int pos = path.LastIndexOf("\\") +1;
@@ -88,8 +67,39 @@ namespace ProjectPsJf
         }
 
 
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+
+            save();
+            Console.WriteLine("Timern körs", e.SignalTime);
+        }
+
+        private void save()
+        {
+           System.Security.Permissions.FileIOPermissionAccess.Write
+            using (var fi = new System.IO.FileStream(filepath, System.IO.FileMode.Create))
+            {
+
+                using (var bw = new System.IO.BinaryWriter(fi, System.Text.Encoding.UTF8))
+                {
+                       tempXDoc = XDocument.Load(filepath);
+                       tempXDoc.Save(@"savedFeeds/src/" + name);
+                       bw.Flush();
+                       bw.Close();
+                }
+
+
+
+            }
+               
+            }
+            
+              
+        }
+
+       
     }
 
 
 
-}
+
