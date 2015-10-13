@@ -52,6 +52,18 @@ namespace ProjectPsJf
             return path;
         }
 
+        public static string getFrek(string path)
+        {
+            string frek;
+            xDocPath = XDocument.Load(path);
+            Console.WriteLine(path);
+            frek = xDocPath.Root.Element("Frek").Value;
+            return frek;
+
+
+
+        }
+
         
     }
 }

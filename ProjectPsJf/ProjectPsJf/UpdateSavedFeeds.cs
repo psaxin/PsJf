@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
+
 namespace ProjectPsJf
 {
 
@@ -15,7 +16,7 @@ namespace ProjectPsJf
     {
         private string url;
         private string name;
-        private int frekvens;
+        private string frekvens;
         private string filepath;
         private XDocument tempXDoc = new XDocument();
         public UpdateSavedFeeds() {
@@ -28,13 +29,18 @@ namespace ProjectPsJf
         private void checkFeeds() {
             //savedFeeds\src\alexosigge.xml
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
+            string[] frekPath = Directory.GetFiles(@"savedFeeds\");
 
-            string url;
             foreach (var element in filePaths) {
                 url = HanteraRss.getURL(element);
                 filepath = element;
                 name = getName(element);
-                setUpdate(namn, url, frekvens);
+                foreach (var frek in frekPath)
+                {
+                    frekvens = HanteraRss.getFrek(frek);
+                    Console.WriteLine(name + "\n" + url + "\n" + Int32.Parse(frekvens));
+                }
+                //setUpdate(name, url, Int32.Parse(frekvens));
                 
             }
 
@@ -63,23 +69,13 @@ namespace ProjectPsJf
         });
         }
 
-
-
-
-
-        private string getName(string inc) {
-            //savedFeeds\src\alexosigge.xml
-            string newString;
-
-
+        private string getName(string path) {
+            int pos = path.LastIndexOf("\\") +1;
+            string newString = path.Substring(pos);
             return newString;
 
         }
 
-        private void getFrek() {
-
-
-        }
 
     }
 
