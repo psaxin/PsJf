@@ -31,24 +31,28 @@ namespace ProjectPsJf
         private void checkFeeds() {
             //savedFeeds\src\alexosigge.xml
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
-            
-            foreach (var element in filePaths) {
-                url = HanteraRss.getURL(element);
-                filepath = element;
-                name = getName(element);
-                frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
-                setUpdate(name, url, Int32.Parse(frekvens) * 1000);
-                //Console.WriteLine("Foreachen loopens värde" + name  + url  + Int32.Parse(frekvens) * 10000);
-              
-                
-            }
+            string[] hehe = filePaths;
 
+            filePaths = null;
+
+            foreach (var element in hehe) {
+               url = HanteraRss.getURL(element);
+              filepath = element;
+              name = getName(element);
+                frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
+               setUpdate(name, url, Int32.Parse(frekvens) * 1000);
+
+               //Console.WriteLine("Foreachen loopens värde" + name  + url  + Int32.Parse(frekvens) * 10000);
+
+
+            }
+         
         
         }
 
         private void setUpdate(string namn, string url, int frekvens) {
             // GLÖM INTE FREKVENSEN!!!!
-            var timer = new System.Timers.Timer(10000);
+            var timer = new System.Timers.Timer(5000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
 
@@ -68,6 +72,17 @@ namespace ProjectPsJf
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
            
+
+            //using (FileStream fs = new FileStream(filepath,
+            //  FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            //{
+            //    //XmlDocument newdoc = new XmlDocument();
+            //    //newDoc.Load("http://alexosigge.libsyn.com/rss");
+
+            //    //newdoc.Save(filepath);
+            //}
+
+
             string temp;
             FileStream fs;
             fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
@@ -76,10 +91,10 @@ namespace ProjectPsJf
             writer.Write(temp);
             writer.Flush();
             Console.WriteLine("skrev");
-            writer.Close();
+           writer.Close();
             fs.Close();
 
-            
+
         }
 
 
@@ -95,7 +110,9 @@ namespace ProjectPsJf
 
             StringBuilder rssContent = new StringBuilder();
 
+            rssContent.Append("<channel>");
             // Iterate through the items in the RSS file
+           
             foreach (XmlNode rssNode in rssNodes)
             {
                 XmlNode rssSubNode = rssNode.SelectSingleNode("title");
@@ -107,9 +124,13 @@ namespace ProjectPsJf
                 rssSubNode = rssNode.SelectSingleNode("description");
                 string description = rssSubNode != null ? rssSubNode.InnerText : "";
 
-                rssContent.Append("<a href='" + link + "'>" + title + "</a><br>" + description);
-            }
 
+                rssSubNode = rssNode.SelectSingleNode("//enclosure/@url");
+                string urlout = rssSubNode != null ? rssSubNode.InnerText : "";
+                //(string)x.Element("enclosure").Attribute("url").Value,
+                rssContent.Append("<item><title>"+ title + "</title><enclosure>"+ urlout +"</enclosure></item>");
+            }
+            rssContent.Append("/channel>");
             // Return the string that contain the RSS items
             return rssContent.ToString();
         }
