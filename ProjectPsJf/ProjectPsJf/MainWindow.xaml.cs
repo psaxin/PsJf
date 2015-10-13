@@ -20,6 +20,8 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using System.IO;
 
+
+
 namespace ProjectPsJf
 {
     /// <summary>
@@ -37,13 +39,14 @@ namespace ProjectPsJf
         public object MathHelper { get; private set; }
         private List<listViewItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
+       //private Timer aTimer;
 
         public MainWindow()
         {
             InitializeComponent();
             //skapar columner till listViewDetails. Detta kan vi kan skapa direkt i designern..
-             updateSavedFeeds();
- 
+            UpdateSavedFeeds updateThread = new UpdateSavedFeeds();
+            showSavedFeeds();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -54,10 +57,10 @@ namespace ProjectPsJf
         public void fyllLista() {
             //hämtar text från textBox
             string rssUrl = textBox.Text;
-
+            listViewDetails.Items.Clear();
             try
             {
-                List<listViewItems> items = ConvertRss.toXml(rssUrl);
+                List<listViewItems> items = HanteraRss.toXml(rssUrl);
                 
                 foreach (var i in items)
                 {
@@ -175,8 +178,9 @@ namespace ProjectPsJf
 
             string path = @"savedFeeds/" + name + ".xml";
             createSaveFile.create(name,path,kat,frek);
+            xDoc = XDocument.Load(textBox.Text);
             xDoc.Save(@"savedFeeds/src/" + name + ".xml");
-            Console.WriteLine((listViewDetails.SelectedItem as listViewItems).URL);
+            //Console.WriteLine((listViewDetails.SelectedItem as listViewItems).URL);
         }
 
         private void updateFeed(string chosenFile) {
@@ -221,16 +225,9 @@ namespace ProjectPsJf
 
         }
 
-        private void lwFeed_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-            Console.WriteLine(@"savedFeeds/src/" + chosenFile + ".xml");
-            updateFeed(@"savedFeeds/src/" +chosenFile +".xml");
-            
-        }
-
+    
        
-        private void updateSavedFeeds() {
+        private void showSavedFeeds() {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
             lwFeed.Items.Clear();
@@ -302,7 +299,7 @@ namespace ProjectPsJf
 
                 Console.WriteLine(re);
             }
-            updateSavedFeeds();
+            showSavedFeeds();
 
         }
 
@@ -320,6 +317,27 @@ namespace ProjectPsJf
             btnPlay.IsEnabled = true;
         }
 
-  
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            //int intervalid = Script.SetInterval(delegate { Window.Alert("Hello"); }, 3000);
+            //_timer = new Timer(10000);
+
+
+            //.SetTimeout(TimeoutHandler, 3000);
+
+           // aTimer = new System.Timers.Timer(1000);
+            //aTimer.Elapsed += new ElapsedEventHandler(RunThis);
+            //aTimer.AutoReset = true;
+            //aTimer.Enabled = true;
+            //startaIntervall();
+        }
+
+        private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
+        {
+            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+            Console.WriteLine(@"savedFeeds/src/" + chosenFile + ".xml");
+            updateFeed(@"savedFeeds/src/" + chosenFile + ".xml");
+
+        }
     }
-}
+    }

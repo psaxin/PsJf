@@ -26,6 +26,7 @@ namespace ProjectPsJf
         {
 
             InitializeComponent();
+           
         }
 
         private void btnSpara_Click(object sender, EventArgs e)
@@ -35,8 +36,8 @@ namespace ProjectPsJf
             this.Dispose();
 
         }
+     
 
-       
 
     }
 }

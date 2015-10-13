@@ -29,12 +29,12 @@
         <Button x:Name="btnStop" Content="Stopp" HorizontalAlignment="Left" Margin="246,476,0,0" VerticalAlignment="Top" Width="75" Click="btnStop_Click"/>
         <Label x:Name="lblStatus" Content="Tid:" HorizontalAlignment="Left" Margin="91,418,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblFileName" Content="//  dubbel klicka på en pod för att spela" HorizontalAlignment="Left" Margin="91,392,0,0" VerticalAlignment="Top"/>
-        <ListView x:Name="lwFeed" HorizontalAlignment="Left" Height="158" Margin="504,60,0,0" VerticalAlignment="Top" Width="150">
+        <ListView x:Name="lwFeed" HorizontalAlignment="Left" Height="158" Margin="504,60,0,0" VerticalAlignment="Top" Width="150" MouseDoubleClick="lwFeed_MouseDoubleClick_1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Namn" DisplayMemberBinding="{Binding Namn}"/>
                     <GridViewColumn Header="Kategori" DisplayMemberBinding="{Binding Kategori}"/>
-                    <GridViewColumn Header="Frekvens" DisplayMemberBinding="{Binding Kategori}"/>
+                    <GridViewColumn Header="Frekvens" DisplayMemberBinding="{Binding Frekvens}"/>
                 </GridView>
             </ListView.View>
         </ListView>
