@@ -71,7 +71,7 @@ namespace ProjectPsJf
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-           
+
 
             //using (FileStream fs = new FileStream(filepath,
             //  FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -82,66 +82,51 @@ namespace ProjectPsJf
             //    //newdoc.Save(filepath);
             //}
 
+           
+                string temp;
+                FileStream fs;
+                 temp = HanteraRss.ParseToString("http://alexosigge.libsyn.com/rss");
+            try
+            {
+                    fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
+                    StreamWriter writer = new StreamWriter(fs);
+                    writer.Write(temp);
+                    writer.Flush();
+                    writer.Close();
+                    fs.Close();
+                Console.WriteLine("skrev" + filepath);
+            }
+            catch (FileNotFoundException x)
+            {
 
-            string temp;
-            FileStream fs;
-            fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
-            StreamWriter writer = new StreamWriter(fs);
-            temp = ParseRssFile("http://alexosigge.libsyn.com/rss");
-            writer.Write(temp);
-            writer.Flush();
-            Console.WriteLine("skrev");
-           writer.Close();
-            fs.Close();
+                Console.WriteLine("misslyckades läsa " + filepath);
 
+            }
+            catch (IOException x)
+            {
 
-        }
+                Console.WriteLine("misslyckades läsa " + filepath);
 
+            }
+            catch (Exception ege)
+            {
 
-        private string ParseRssFile(string urlin)
-        {
-            XmlDocument rssXmlDoc = new XmlDocument();
+                Console.WriteLine("misslyckades läsa  " + filepath);
 
-            // Load the RSS file from the RSS URL
-            rssXmlDoc.Load(urlin);
-
-            // Parse the Items in the RSS file
-            //XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
-            XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss");
-
-            StringBuilder rssContent = new StringBuilder();
+            }
+            //finally
+            //{
+            //    if (fs != null)
+            //        fs.Close();
+            //}
 
             
-            // Iterate through the items in the RSS file
-           rssContent.Append("<?xml version='1.0' encoding='UTF-8'?>");
-               rssContent.Append("<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>");
-            rssContent.Append("<channel>");
-            foreach (XmlNode rssNode in rssNodes)
-            {
-                XmlNode rssSubNode = rssNode.SelectSingleNode("channel");
-                string channel = rssSubNode != null ? rssSubNode.InnerXml : "";
-                   
-                //XmlNode rssSubNode = rssNode.SelectSingleNode("title");
-                //string title = rssSubNode != null ? rssSubNode.InnerText : "";
+           
 
-                //rssSubNode = rssNode.SelectSingleNode("link");
-                //string link = rssSubNode != null ? rssSubNode.InnerText : "";
-
-                //rssSubNode = rssNode.SelectSingleNode("description");
-                //string description = rssSubNode != null ? rssSubNode.InnerText : "";
-
-
-                //rssSubNode = rssNode.SelectSingleNode("//enclosure/@url");
-                //string urlout = rssSubNode != null ? rssSubNode.InnerText : "";
-                ////(string)x.Element("enclosure").Attribute("url").Value,
-                //rssContent.Append("<item><title>"+ title + "</title><enclosure>"+ urlout +"</enclosure></item>");
-                rssContent.Append(channel);
-            }
-            rssContent.Append("</channel>");
-            rssContent.Append("</rss>");
-            // Return the string that contain the RSS items
-            return rssContent.ToString();
         }
+
+
+       
     }
 
        

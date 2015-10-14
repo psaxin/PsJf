@@ -59,11 +59,53 @@ namespace ProjectPsJf
             Console.WriteLine(path);
             frek = xDocPath.Root.Element("Frek").Value;
             return frek;
-
-
-
         }
 
-        
+        public static string ParseToString(string urlin)
+        {
+            XmlDocument rssXmlDoc = new XmlDocument();
+
+            // Load the RSS file from the RSS URL
+            rssXmlDoc.Load(urlin);
+
+            // Parse the Items in the RSS file
+            //XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
+            XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss");
+
+            StringBuilder rssContent = new StringBuilder();
+
+
+            // Iterate through the items in the RSS file
+            rssContent.Append("<?xml version='1.0' encoding='UTF-8'?>");
+            rssContent.Append("<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>");
+            rssContent.Append("<channel>");
+            foreach (XmlNode rssNode in rssNodes)
+            {
+                XmlNode rssSubNode = rssNode.SelectSingleNode("channel");
+                string channel = rssSubNode != null ? rssSubNode.InnerXml : "";
+
+                //XmlNode rssSubNode = rssNode.SelectSingleNode("title");
+                //string title = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                //rssSubNode = rssNode.SelectSingleNode("link");
+                //string link = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                //rssSubNode = rssNode.SelectSingleNode("description");
+                //string description = rssSubNode != null ? rssSubNode.InnerText : "";
+
+
+                //rssSubNode = rssNode.SelectSingleNode("//enclosure/@url");
+                //string urlout = rssSubNode != null ? rssSubNode.InnerText : "";
+                ////(string)x.Element("enclosure").Attribute("url").Value,
+                //rssContent.Append("<item><title>"+ title + "</title><enclosure>"+ urlout +"</enclosure></item>");
+                rssContent.Append(channel);
+            }
+            rssContent.Append("</channel>");
+            rssContent.Append("</rss>");
+            // Return the string that contain the RSS items
+            return rssContent.ToString();
+        }
+
+
     }
 }
