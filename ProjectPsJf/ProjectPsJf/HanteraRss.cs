@@ -17,9 +17,10 @@ namespace ProjectPsJf
 
         public static List<listViewItems> toXml(string url)
         {
+            xmlList.Clear();
             xDoc = XDocument.Load(url);
             //hämtar ut element från xDoc till en lista av objekt
-            var items = (from x in xDoc.Descendants("item")
+            var newitems = (from x in xDoc.Descendants("item")
                          select new
                          {
                              // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
@@ -29,12 +30,12 @@ namespace ProjectPsJf
                              url = (string)x.Element("enclosure").Attribute("url").Value,
                          });
 
-            if (items != null)
+            if (newitems != null)
             {
                 
-                foreach (var i in items)
+                foreach (var i in newitems)
                 {
-                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url, Seen = false });
+                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url, Seen = false, Stamp = i.url});
 
                 }
                

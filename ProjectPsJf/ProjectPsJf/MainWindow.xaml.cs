@@ -36,6 +36,7 @@ namespace ProjectPsJf
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private XDocument xDoc = new XDocument();
         private string currentFile ="";
+        private string currentUrl = "";
         public object MathHelper { get; private set; }
         private List<listViewItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
@@ -62,10 +63,11 @@ namespace ProjectPsJf
             string rssUrl = textBox.Text;
 
             
-            if (listViewDetails.Items.Count == 0)
+            if (listViewDetails.Items.Count == 0 || rssUrl != currentUrl)
             {
                 try
                 {
+                    currentUrl = rssUrl;
                     listViewDetails.Items.Clear();
                     items = HanteraRss.toXml(rssUrl);
 
@@ -188,7 +190,7 @@ namespace ProjectPsJf
              //saveDoc = XDocument.Load(feed);
 
 
-            lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
+            lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
 
             //xDoc.Save(@"savedFeeds/src/" + save.tbNamn.Text + ".xml");
             saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
@@ -205,46 +207,103 @@ namespace ProjectPsJf
             //Console.WriteLine((listViewDetails.SelectedItem as listViewItems).URL);
         }
 
-        private void updateFeed(string chosenFile) {
+        private void updateFeed(string chosenFile, string fileStamp) {
 
-            listViewDetails.Items.Clear();
-            try
+            if ((listViewDetails.Items.IsEmpty) == false)
             {
-                
-                xDoc = XDocument.Load(chosenFile);
-                //hämtar ut element från xDoc till en lista av objekt
-                var newItems = (from x in xDoc.Descendants("item")
-                             select new
-                             {
-                                 // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
-
-                                 title = x.Element("title").Value,
-                                 pubDate = x.Element("pubDate").Value,
-                                 url = (string)x.Element("enclosure").Attribute("url").Value,
-                             });
-                //så länge items inte är tom..
-                if (newItems != null)
+                Console.WriteLine("filestamp = "+fileStamp + "GetItemAt = "+(listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp);
+                if ((listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp != fileStamp)
                 {
-                    //tömmer listboxen
-                    listViewDetails.Items.Clear();
-                    //loopar igenom alla objekt i items.
-                    foreach (var i in newItems)
+                    try
                     {
-                        //lägger till i listen
-                        //Console.WriteLine(i.url);
-                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url });
-                        //listViewDetails.Items.Add.(i.title);
+                        listViewDetails.Items.Clear();
+                        xDoc = XDocument.Load(chosenFile);
+                        //hämtar ut element från xDoc till en lista av objekt
+                        var newItems = (from x in xDoc.Descendants("item")
+                                        select new
+                                        {
+                                            // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
+
+                                            title = x.Element("title").Value,
+                                            pubDate = x.Element("pubDate").Value,
+                                            url = (string)x.Element("enclosure").Attribute("url").Value,
+                                        });
+                        //så länge items inte är tom..
+                        if (newItems != null)
+                        {
+                            //tömmer listboxen
+                            listViewDetails.Items.Clear();
+                            //loopar igenom alla objekt i items.
+                            foreach (var i in newItems)
+                            {
+                                //lägger till i listen
+                                //Console.WriteLine(i.url);
+                                this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp });
+                                //listViewDetails.Items.Add.(i.title);
+                            }
+                        }
+                        Console.WriteLine("Uppdaterade listan med "+chosenFile);
+                    }
+
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("URL fungerade ej");
+
+                    }
+                }
+            }
+            else if (listViewDetails.Items.Count == 0) {
+               
+                    try
+                    {
+                        listViewDetails.Items.Clear();
+                        xDoc = XDocument.Load(chosenFile);
+                        //hämtar ut element från xDoc till en lista av objekt
+                        var newItems = (from x in xDoc.Descendants("item")
+                                        select new
+                                        {
+                                            // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
+
+                                            title = x.Element("title").Value,
+                                            pubDate = x.Element("pubDate").Value,
+                                            url = (string)x.Element("enclosure").Attribute("url").Value,
+                                        });
+                        //så länge items inte är tom..
+                        if (newItems != null)
+                        {
+                            //tömmer listboxen
+                            listViewDetails.Items.Clear();
+                            //loopar igenom alla objekt i items.
+                            foreach (var i in newItems)
+                            {
+                                //lägger till i listen
+                                //Console.WriteLine(i.url);
+                                this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp });
+                                //listViewDetails.Items.Add.(i.title);
+                            }
+                        }
+
+                    }
+
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("URL fungerade ej");
+
                     }
                 }
 
-            }
 
-            catch (System.Net.WebException)
+            
+            else
             {
-                MessageBox.Show("URL fungerade ej");
+                listViewDetails.Items.Clear();
+                foreach (var i in items)
+                {
+                    this.listViewDetails.Items.Add(i);
 
+                }
+                
             }
-
 
         }
 
@@ -272,7 +331,7 @@ namespace ProjectPsJf
                     {
                         foreach (var i in items)
                         {
-                            lwFeed.Items.Add(new listViewItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek  });
+                            lwFeed.Items.Add(new listViewItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek, Stamp = i.name  });
                        
                         }
                     }
@@ -354,7 +413,9 @@ namespace ProjectPsJf
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-            updateFeed(@"savedFeeds/src/" + chosenFile + ".xml");
+            string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
+            Console.WriteLine("FileStamp = "+ fileStamp);
+            updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
 
         }
 

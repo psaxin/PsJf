@@ -27,9 +27,18 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                  
-                  <!--  </GridViewColumn> DisplayMemberBinding="{Binding Title}"/>-->
-                    <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding Date}"/>
+                    <GridViewColumn Header="Date">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="Txt" Text="{Binding Date}" />
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Seen}" Value="true">
+                                        <Setter TargetName="Txt" Property="Foreground" Value="Gray" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

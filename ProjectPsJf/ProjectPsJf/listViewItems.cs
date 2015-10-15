@@ -13,6 +13,7 @@ namespace ProjectPsJf
         public string Date { get; set; }
         public string URL { get; set; }
         public string Namn { get; set; }
+        public string Stamp { get; set; }
         public string Kategori { get; set; }
         public string Frekvens { get; set; }
         public bool Seen { get; set; }
