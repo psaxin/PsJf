@@ -17,6 +17,7 @@ namespace ProjectPsJf
 
     class UpdateSavedFeeds : Form
     {
+        private MainWindow mainForm;
         private int itteration = 0;
         private int time = 0;
         private string url;
@@ -26,9 +27,9 @@ namespace ProjectPsJf
         private static string[,] minTabell;
         private XDocument tempXDoc = new XDocument();
 
-        public UpdateSavedFeeds()
+        public UpdateSavedFeeds(MainWindow main)
         {
-            
+            mainForm = main;
             initialize();
         }
 
@@ -54,7 +55,7 @@ namespace ProjectPsJf
 
         private void startUpdateThread()
         {
-            var timer = new System.Timers.Timer(60000);
+            var timer = new System.Timers.Timer(6000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
@@ -69,7 +70,7 @@ namespace ProjectPsJf
         
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-
+            
             itteration++;
             collectSavedFiles();
             collectFrek();

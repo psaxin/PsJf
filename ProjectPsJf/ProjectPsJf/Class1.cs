@@ -8,11 +8,25 @@ using System.Xml.Linq;
 
 namespace ProjectPsJf
 {
+   
     //denna klass finns mest för att experimentera i för tillfället
-     public static class Class1
+    public class Class1
     {
-        public static void test() {
-          
+        private MainWindow mainForm;
+
+        public Class1(MainWindow main) {
+            mainForm = main;
+
+
+        }
+        public void test() {
+
+            mainForm.printStatusMessage("hej");
+
+            //lbStatusMessage.Dispatcher.BeginInvoke(new Action(delegate ()
+            //{
+            //    lbStatusMessage.Items.Add("ddd");
+            //}));
         }
 
  

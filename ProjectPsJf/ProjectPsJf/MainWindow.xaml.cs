@@ -44,14 +44,15 @@ namespace ProjectPsJf
         public MainWindow()
         {
             InitializeComponent();
-            //skapar columner till listViewDetails. Detta kan vi kan skapa direkt i designern..
-            UpdateSavedFeeds updateThread = new UpdateSavedFeeds();
+            UpdateSavedFeeds updateThread = new UpdateSavedFeeds(this);
             showSavedFeeds();
-            
+
+
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+           
             fyllLista();
         }
 
@@ -117,6 +118,7 @@ namespace ProjectPsJf
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
+           
             mediaPlayer.Stop();
         }
 
@@ -341,7 +343,14 @@ namespace ProjectPsJf
         }
 
         public void printStatusMessage(string message){
+
             lbStatusMessages.Items.Add("<"+DateTime.Now.ToShortTimeString() +"> "+ message);
+            
+
         }
+
+
         }
+
+ 
     }
