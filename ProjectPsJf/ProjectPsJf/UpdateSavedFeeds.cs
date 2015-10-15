@@ -55,7 +55,7 @@ namespace ProjectPsJf
 
         private void startUpdateThread()
         {
-            var timer = new System.Timers.Timer(6000);
+            var timer = new System.Timers.Timer(60000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
@@ -70,7 +70,8 @@ namespace ProjectPsJf
         
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            
+           
+
             itteration++;
             collectSavedFiles();
             collectFrek();
@@ -100,7 +101,12 @@ namespace ProjectPsJf
                         writer.Flush();
                         writer.Close();
                         fs.Close();
-                        Console.WriteLine(">>>>SPARADE<<<< " + filepath);
+
+                        mainForm.Dispatcher.BeginInvoke(new Action(delegate ()
+                        {
+                            //fs.getName är hela filepath, så vi kallar på metoden getName för att trimma strängen till filnamnet
+                            mainForm.printStatusMessage("Uppdaterade " + getName(fs.Name));
+                        }));
                     }
                     catch (FileNotFoundException x)
                     {
