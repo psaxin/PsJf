@@ -15,6 +15,6 @@ namespace ProjectPsJf
         public string Namn { get; set; }
         public string Kategori { get; set; }
         public string Frekvens { get; set; }
-
+        public bool Seen { get; set; }
     }
 }

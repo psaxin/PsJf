@@ -39,6 +39,7 @@ namespace ProjectPsJf
         public object MathHelper { get; private set; }
         private List<listViewItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
+        List<listViewItems> items;
        //private Timer aTimer;
 
         public MainWindow()
@@ -59,24 +60,38 @@ namespace ProjectPsJf
         public void fyllLista() {
             //hämtar text från textBox
             string rssUrl = textBox.Text;
-            listViewDetails.Items.Clear();
-            try
+
+            
+            if (listViewDetails.Items.Count == 0)
             {
-                List<listViewItems> items = HanteraRss.toXml(rssUrl);
-                
+                try
+                {
+                    listViewDetails.Items.Clear();
+                    items = HanteraRss.toXml(rssUrl);
+
+                    foreach (var i in items)
+                    {
+                        this.listViewDetails.Items.Add(i);
+
+                    }
+
+                }
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("URL fungerade ej");
+
+                }
+            }
+            else {
+                listViewDetails.Items.Clear();
                 foreach (var i in items)
                 {
                     this.listViewDetails.Items.Add(i);
-                  
+
                 }
-               
-            }
-            catch (System.Net.WebException)
-            {
-                MessageBox.Show("URL fungerade ej");
 
             }
-            
+
         }
 
         // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
@@ -134,12 +149,15 @@ namespace ProjectPsJf
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
+            //listViewDetails.Background = System.Windows.Media.Brushes.Beige;
             playMedia(chosenFile);
           
         }
 
         private void playMedia(string file) {
-            
+
+            (listViewDetails.SelectedItem as listViewItems).Seen = true;
+            fyllLista();
             if (file != currentFile) 
             {
                 mediaPlayer.Open(new Uri(file));
@@ -189,12 +207,13 @@ namespace ProjectPsJf
 
         private void updateFeed(string chosenFile) {
 
+            listViewDetails.Items.Clear();
             try
             {
                 
                 xDoc = XDocument.Load(chosenFile);
                 //hämtar ut element från xDoc till en lista av objekt
-                var items = (from x in xDoc.Descendants("item")
+                var newItems = (from x in xDoc.Descendants("item")
                              select new
                              {
                                  // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
@@ -204,12 +223,12 @@ namespace ProjectPsJf
                                  url = (string)x.Element("enclosure").Attribute("url").Value,
                              });
                 //så länge items inte är tom..
-                if (items != null)
+                if (newItems != null)
                 {
                     //tömmer listboxen
                     listViewDetails.Items.Clear();
                     //loopar igenom alla objekt i items.
-                    foreach (var i in items)
+                    foreach (var i in newItems)
                     {
                         //lägger till i listen
                         //Console.WriteLine(i.url);
@@ -330,10 +349,7 @@ namespace ProjectPsJf
             btnPlay.IsEnabled = true;
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-  
-        }
+   
 
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
@@ -349,8 +365,20 @@ namespace ProjectPsJf
 
         }
 
+        private void button1_Click_1(object sender, RoutedEventArgs e)
+        {
+            ListViewItem lvi = new ListViewItem();
+       
+
 
         }
+        private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+
+
+        }
+    }
 
  
     }

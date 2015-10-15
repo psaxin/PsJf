@@ -15,7 +15,20 @@
         <ListView x:Name="listViewDetails" HorizontalAlignment="Left" Height="301" Margin="21,54,0,0" VerticalAlignment="Top" Width="427" MouseDoubleClick="listViewDetails_MouseDoubleClick" SelectionChanged="listViewDetails_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Title}"/>
+                    <GridViewColumn Header="Titel">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                            <TextBlock x:Name="Txt" Text="{Binding Title}" />
+                            <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Seen}" Value="true">
+                                    <Setter TargetName="Txt" Property="Foreground" Value="Gray" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                  
+                  <!--  </GridViewColumn> DisplayMemberBinding="{Binding Title}"/>-->
                     <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding Date}"/>
                 </GridView>
             </ListView.View>
@@ -32,9 +45,21 @@
         <ListView x:Name="lwFeed" HorizontalAlignment="Left" Height="158" Margin="470,60,0,0" VerticalAlignment="Top" Width="267" MouseDoubleClick="lwFeed_MouseDoubleClick_1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Namn" Width="100" DisplayMemberBinding="{Binding Namn}"/>
-                    <GridViewColumn Header="Kategori" Width="90" DisplayMemberBinding="{Binding Kategori}"/>
-                    <GridViewColumn Header="Frekvens" Width="72" DisplayMemberBinding="{Binding Frekvens}"/>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Namn}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Namn" Click="lvUsersColumnHeader_Click">Namn</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="90" DisplayMemberBinding="{Binding Kategori}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Kategori" Click="lvUsersColumnHeader_Click">Kategori</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="72" DisplayMemberBinding="{Binding Frekvens}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Frekvens" Click="lvUsersColumnHeader_Click">Frekvens</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -34,7 +34,7 @@ namespace ProjectPsJf
                 
                 foreach (var i in items)
                 {
-                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url });
+                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url, Seen = false });
 
                 }
                
