@@ -18,130 +18,77 @@ namespace ProjectPsJf
     class UpdateSavedFeeds : Form
     {
         private int itteration = 0;
+        private int time = 0;
         private string url;
         private string name;
         private string frekvens;
         private string filepath;
+        private static string[,] minTabell;
         private XDocument tempXDoc = new XDocument();
+
         public UpdateSavedFeeds()
         {
-
-            checkFeeds();
-            //startUpdate();
+            
+            initialize();
         }
 
-        private void checkFeeds()
+        private void initialize()
         {
-            ////savedFeeds\src\alexosigge.xml
-            //string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
-            //string[] hehe = filePaths;
+            setUpTable();
+            startUpdateThread();
+        }
+        private void setUpTable() {
 
-            //filePaths = null;
+            minTabell = new string[9, 3];
+            
+            string[] filePaths = Directory.GetFiles(@"savedFeeds\");
+            for (int i = 0; i< 9; i++)
+            {
+                for (int j = 0; j != 3; j++)
+                {
+                    minTabell[i, 2] = "0";
+                }
 
-            //foreach (var element in hehe)
-            //{
-            //    url = HanteraRss.getURL(element);
-            //    filepath = element;
-            //    name = getName(element);
-            //    frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
-            //    setUpdate(name, url, Int32.Parse(frekvens) * 1000);
-
-            //    //Console.WriteLine("Foreachen loopens värde" + name  + url  + Int32.Parse(frekvens) * 10000);
-
-
-            //}
-            setUpdate("hej", "då", 0);
-
-
+            }
         }
 
-        private void setUpdate(string namn, string url, int frekvens)
+        private void startUpdateThread()
         {
-            // GLÖM INTE FREKVENSEN!!!!
-            var timer = new System.Timers.Timer(6000);
-            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent2);
+            var timer = new System.Timers.Timer(60000);
+            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
-
         }
-
-
-
-
+        
         private string getName(string path)
         {
             int pos = path.LastIndexOf("\\") + 1;
             string newString = path.Substring(pos);
             return newString;
-
         }
-
-
-        //private void OnTimedEvent(object source, ElapsedEventArgs e)
-        //{
-
-        //    //using (FileStream fs = new FileStream(filepath,
-        //    //  FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        //    //{
-        //    //    //XmlDocument newdoc = new XmlDocument();
-        //    //    //newDoc.Load("http://alexosigge.libsyn.com/rss");
-
-        //    //    //newdoc.Save(filepath);
-        //    //}
-
-        //    string temp;
-        //    FileStream fs;
-        //    temp = HanteraRss.ParseToString("http://alexosigge.libsyn.com/rss");
-        //    try
-        //    {
-        //        fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
-        //        StreamWriter writer = new StreamWriter(fs);
-        //        writer.Write(temp);
-        //        writer.Flush();
-        //        writer.Close();
-        //        fs.Close();
-        //        Console.WriteLine("skrev" + filepath);
-        //    }
-        //    catch (FileNotFoundException x)
-        //    {
-
-        //        Console.WriteLine("misslyckades läsa " + filepath);
-
-        //    }
-        //    catch (IOException x)
-        //    {
-
-        //        Console.WriteLine("misslyckades läsa " + filepath);
-
-        //    }
-        //    catch (Exception ege)
-        //    {
-
-        //        Console.WriteLine("misslyckades läsa  " + filepath);
-
-        //    }
-        //    //finally
-        //    //{
-        //    //    if (fs != null)
-        //    //        fs.Close();
-        //    //}
-        //}
-        private void OnTimedEvent2(object source, ElapsedEventArgs e)
+          
+        
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+
             itteration++;
+            collectSavedFiles();
+            collectFrek();
+            addCurrentToAll();
+
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
             Console.WriteLine("Påbörjar " + itteration);
             string temp;
             FileStream fs;
-            temp = HanteraRss.ParseToString("http://alexosigge.libsyn.com/rss");
+            int theTime = time;
+            for (int i =0; i<filePaths.Length; i++) {
 
-            foreach (var element in filePaths)
-            {
-               
-                //url = HanteraRss.getURL(element);
-                filepath = element;
-                name = getName(element);
-                frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
-                if (Int32.Parse(frekvens) == itteration)
+
+                filepath = minTabell[i, 0];
+                url = HanteraRss.getURL(filepath);
+                temp = HanteraRss.ParseToString(url);
+                //name = getName(element);
+                //frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
+                if (Int32.Parse(minTabell[i,1]) == Int32.Parse(minTabell[i, 2]))
                 {
                     Console.WriteLine("Ifen gick igenom på  " + itteration);
                     try
@@ -152,7 +99,7 @@ namespace ProjectPsJf
                         writer.Flush();
                         writer.Close();
                         fs.Close();
-                        Console.WriteLine("Sparade " + filepath);
+                        Console.WriteLine(">>>>SPARADE<<<< " + filepath);
                     }
                     catch (FileNotFoundException x)
                     {
@@ -172,25 +119,50 @@ namespace ProjectPsJf
                         Console.WriteLine("Exception");
 
                     }
-
+                    //otroligt viktig kodrad.  :)
+                    minTabell[i, 2] = "0";
                 }
-               // setUpdate(name, url, Int32.Parse(frekvens) * 1000);
+
+                
             }
 
-            Console.WriteLine("Avslutade itteration " + itteration);
-
-            if (itteration == 3)
-            {
-             
-                itteration = 0;
-            }
-
-            
-
-          
         }
 
-    }
+        private void addCurrentToAll() {
+
+            string[] filePaths = Directory.GetFiles(@"savedFeeds\");
+            for (int i = 0; i < 9; i++)
+            {
+                    int temp = Int32.Parse(minTabell[i,2]);
+                    temp++;
+                    minTabell[i, 2] = temp.ToString();
+            }
+
+        }
+        private void collectSavedFiles() {
+
+            string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
+
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                minTabell[i, 0] = filePaths[i];
+            }
+
+        }
+        private void collectFrek()
+        {
+            string[] filePaths = Directory.GetFiles(@"savedFeeds\");
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                minTabell[i, 1] = HanteraRss.getFrek(filePaths[i]);
+
+            }
+
+        }
+
+
+
+        }
     }
 
 

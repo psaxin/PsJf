@@ -20,7 +20,7 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using System.IO;
 
-
+using System.Drawing;
 
 namespace ProjectPsJf
 {
@@ -47,6 +47,7 @@ namespace ProjectPsJf
             //skapar columner till listViewDetails. Detta kan vi kan skapa direkt i designern..
             UpdateSavedFeeds updateThread = new UpdateSavedFeeds();
             showSavedFeeds();
+            
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -173,6 +174,7 @@ namespace ProjectPsJf
             saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
             //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
 
+
         }
         private void saveFeed(string name, string kat, string frek) {
 
@@ -275,12 +277,20 @@ namespace ProjectPsJf
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
+            string path ="";
+            string pathSrc="";
+            try
+            {
+                string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+                path = @"savedFeeds/" + chosenFile + ".XML";
+                pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
+            }
+            catch {
 
-            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-            string path = @"savedFeeds/" + chosenFile + ".XML";
-            string pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
-            Console.WriteLine(path);
-            Console.WriteLine(pathSrc);
+                printStatusMessage("Välj en fil att radera");
+            }
+           
+            
             try
             {
                 if (File.Exists(path))
@@ -288,6 +298,7 @@ namespace ProjectPsJf
                     Console.WriteLine("filen finns!!!");
                     File.Delete(path);
                     File.Delete(pathSrc);
+                    printStatusMessage("Raderade filen: "+ path);
                 }
                 else
                 {
@@ -319,25 +330,18 @@ namespace ProjectPsJf
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            //int intervalid = Script.SetInterval(delegate { Window.Alert("Hello"); }, 3000);
-            //_timer = new Timer(10000);
-
-
-            //.SetTimeout(TimeoutHandler, 3000);
-
-           // aTimer = new System.Timers.Timer(1000);
-            //aTimer.Elapsed += new ElapsedEventHandler(RunThis);
-            //aTimer.AutoReset = true;
-            //aTimer.Enabled = true;
-            //startaIntervall();
+  
         }
 
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-            Console.WriteLine(@"savedFeeds/src/" + chosenFile + ".xml");
             updateFeed(@"savedFeeds/src/" + chosenFile + ".xml");
 
         }
-    }
+
+        public void printStatusMessage(string message){
+            lbStatusMessages.Items.Add("<"+DateTime.Now.ToShortTimeString() +"> "+ message);
+        }
+        }
     }

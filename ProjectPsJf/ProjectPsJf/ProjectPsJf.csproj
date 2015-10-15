@@ -51,16 +51,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint></ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>
+    </ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile></ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests></GenerateManifests>
+    <GenerateManifests>
+    </GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests></SignManifests>
+    <SignManifests>
+    </SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
