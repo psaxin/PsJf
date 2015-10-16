@@ -19,6 +19,7 @@ using Microsoft.Win32;
 using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.ComponentModel;
 
 using System.Drawing;
 
@@ -35,34 +36,36 @@ namespace ProjectPsJf
         //private ObservableCollection<listViewItems> minLista = new ObservableCollection<listViewItems>();
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private XDocument xDoc = new XDocument();
-        private string currentFile ="";
+        private string currentFile = "";
         private string currentUrl = "";
         public object MathHelper { get; private set; }
         private List<listViewItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
         List<listViewItems> items;
-       //private Timer aTimer;
+        public Boolean asc;
+        //private Timer aTimer;
 
         public MainWindow()
         {
             InitializeComponent();
             UpdateSavedFeeds updateThread = new UpdateSavedFeeds(this);
             showSavedFeeds();
-
+            asc = false;
 
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-           
+
             fyllLista();
         }
 
-        public void fyllLista() {
+        public void fyllLista()
+        {
             //hämtar text från textBox
             string rssUrl = textBox.Text;
 
-            
+
             if (listViewDetails.Items.Count == 0 || rssUrl != currentUrl)
             {
                 try
@@ -84,7 +87,8 @@ namespace ProjectPsJf
 
                 }
             }
-            else {
+            else
+            {
                 listViewDetails.Items.Clear();
                 foreach (var i in items)
                 {
@@ -104,7 +108,8 @@ namespace ProjectPsJf
             {
                 button.IsEnabled = false;
             }
-            else {
+            else
+            {
                 button.IsEnabled = true;
             }
         }
@@ -117,16 +122,16 @@ namespace ProjectPsJf
 
 
         }
-     
-       private void btnPlay_Click(object sender, RoutedEventArgs e)
+
+        private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
 
-            
+
             playMedia((listViewDetails.SelectedItem as listViewItems).URL);
-         
-              
+
+
         }
-      
+
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
@@ -135,7 +140,7 @@ namespace ProjectPsJf
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-           
+
             mediaPlayer.Stop();
         }
 
@@ -153,41 +158,43 @@ namespace ProjectPsJf
             string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
             //listViewDetails.Background = System.Windows.Media.Brushes.Beige;
             playMedia(chosenFile);
-          
+
         }
 
-        private void playMedia(string file) {
+        private void playMedia(string file)
+        {
 
             (listViewDetails.SelectedItem as listViewItems).Seen = true;
             fyllLista();
-            if (file != currentFile) 
+            if (file != currentFile)
             {
                 mediaPlayer.Open(new Uri(file));
                 mediaPlayer.Play();
                 currentFile = file;
-                
+
                 timer.Interval = TimeSpan.FromSeconds(1);
                 timer.Tick += timer_Tick;
                 timer.Start();
             }
-            
 
-            else { 
-            mediaPlayer.Play();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += timer_Tick;
-            timer.Start();
+
+            else
+            {
+                mediaPlayer.Play();
+                timer.Interval = TimeSpan.FromSeconds(1);
+                timer.Tick += timer_Tick;
+                timer.Start();
             }
         }
 
         public void addToListBox(saveWindow save)
         {
-             String feed = "";
-             feed += save.tbNamn.Text;
-             feed += save.tbKat.Text;
-             feed += save.tbUppd.Text;
-             //XDocument saveDoc = new XDocument();
-             //saveDoc = XDocument.Load(feed);
+            String feed = "";
+            feed += save.tbNamn.Text;
+            feed += save.tbKat.Text;
+            feed += save.tbUppd.Text;
+            //XDocument saveDoc = new XDocument();
+            //saveDoc = XDocument.Load(feed);
 
 
             lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
@@ -198,20 +205,22 @@ namespace ProjectPsJf
 
 
         }
-        private void saveFeed(string name, string kat, string frek) {
+        private void saveFeed(string name, string kat, string frek)
+        {
 
             string path = @"savedFeeds/" + name + ".xml";
-            createSaveFile.create(name,path,kat,frek);
+            createSaveFile.create(name, path, kat, frek);
             xDoc = XDocument.Load(textBox.Text);
             xDoc.Save(@"savedFeeds/src/" + name + ".xml");
             //Console.WriteLine((listViewDetails.SelectedItem as listViewItems).URL);
         }
 
-        private void updateFeed(string chosenFile, string fileStamp) {
+        private void updateFeed(string chosenFile, string fileStamp)
+        {
 
             if ((listViewDetails.Items.IsEmpty) == false)
             {
-                Console.WriteLine("filestamp = "+fileStamp + "GetItemAt = "+(listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp);
+                Console.WriteLine("filestamp = " + fileStamp + "GetItemAt = " + (listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp);
                 if ((listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp != fileStamp)
                 {
                     try
@@ -242,7 +251,7 @@ namespace ProjectPsJf
                                 //listViewDetails.Items.Add.(i.title);
                             }
                         }
-                        Console.WriteLine("Uppdaterade listan med "+chosenFile);
+                        Console.WriteLine("Uppdaterade listan med " + chosenFile);
                     }
 
                     catch (System.Net.WebException)
@@ -252,48 +261,49 @@ namespace ProjectPsJf
                     }
                 }
             }
-            else if (listViewDetails.Items.Count == 0) {
-               
-                    try
+            else if (listViewDetails.Items.Count == 0)
+            {
+
+                try
+                {
+                    listViewDetails.Items.Clear();
+                    xDoc = XDocument.Load(chosenFile);
+                    //hämtar ut element från xDoc till en lista av objekt
+                    var newItems = (from x in xDoc.Descendants("item")
+                                    select new
+                                    {
+                                        // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
+
+                                        title = x.Element("title").Value,
+                                        pubDate = x.Element("pubDate").Value,
+                                        url = (string)x.Element("enclosure").Attribute("url").Value,
+                                    });
+                    //så länge items inte är tom..
+                    if (newItems != null)
                     {
+                        //tömmer listboxen
                         listViewDetails.Items.Clear();
-                        xDoc = XDocument.Load(chosenFile);
-                        //hämtar ut element från xDoc till en lista av objekt
-                        var newItems = (from x in xDoc.Descendants("item")
-                                        select new
-                                        {
-                                            // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
-
-                                            title = x.Element("title").Value,
-                                            pubDate = x.Element("pubDate").Value,
-                                            url = (string)x.Element("enclosure").Attribute("url").Value,
-                                        });
-                        //så länge items inte är tom..
-                        if (newItems != null)
+                        //loopar igenom alla objekt i items.
+                        foreach (var i in newItems)
                         {
-                            //tömmer listboxen
-                            listViewDetails.Items.Clear();
-                            //loopar igenom alla objekt i items.
-                            foreach (var i in newItems)
-                            {
-                                //lägger till i listen
-                                //Console.WriteLine(i.url);
-                                this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp });
-                                //listViewDetails.Items.Add.(i.title);
-                            }
+                            //lägger till i listen
+                            //Console.WriteLine(i.url);
+                            this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp });
+                            //listViewDetails.Items.Add.(i.title);
                         }
-
                     }
 
-                    catch (System.Net.WebException)
-                    {
-                        MessageBox.Show("URL fungerade ej");
-
-                    }
                 }
 
+                catch (System.Net.WebException)
+                {
+                    MessageBox.Show("URL fungerade ej");
 
-            
+                }
+            }
+
+
+
             else
             {
                 listViewDetails.Items.Clear();
@@ -302,22 +312,24 @@ namespace ProjectPsJf
                     this.listViewDetails.Items.Add(i);
 
                 }
-                
+
             }
 
         }
 
-    
-       
-        private void showSavedFeeds() {
+
+
+        private void showSavedFeeds()
+        {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
             lwFeed.Items.Clear();
-            foreach (string element in filePaths) {
+            foreach (string element in filePaths)
+            {
                 try
                 {
                     xDoc = XDocument.Load(element);
-                    
+
                     var items = (from x in xDoc.Descendants("body")
                                  select new
                                  {
@@ -326,13 +338,13 @@ namespace ProjectPsJf
                                      kat = x.Element("Kat").Value,
                                      frek = x.Element("Frek").Value
                                  });
-                    
+
                     if (items != null)
                     {
                         foreach (var i in items)
                         {
-                            lwFeed.Items.Add(new listViewItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek, Stamp = i.name  });
-                       
+                            lwFeed.Items.Add(new listViewItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek, Stamp = i.name });
+
                         }
                     }
 
@@ -357,20 +369,21 @@ namespace ProjectPsJf
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
-            string path ="";
-            string pathSrc="";
+            string path = "";
+            string pathSrc = "";
             try
             {
                 string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
                 path = @"savedFeeds/" + chosenFile + ".XML";
                 pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
             }
-            catch {
+            catch
+            {
 
                 printStatusMessage("Välj en fil att radera");
             }
-           
-            
+
+
             try
             {
                 if (File.Exists(path))
@@ -378,7 +391,7 @@ namespace ProjectPsJf
                     Console.WriteLine("filen finns!!!");
                     File.Delete(path);
                     File.Delete(pathSrc);
-                    printStatusMessage("Raderade filen: "+ path);
+                    printStatusMessage("Raderade filen: " + path);
                 }
                 else
                 {
@@ -396,50 +409,77 @@ namespace ProjectPsJf
 
         private void listViewDetails_GotMouseCapture(object sender, MouseEventArgs e)
         {
-           
+
             btnPlay.IsEnabled = true;
             //chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
-           
+
         }
 
         private void listViewDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-        
+
             btnPlay.IsEnabled = true;
         }
 
-   
+
 
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
             string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
-            Console.WriteLine("FileStamp = "+ fileStamp);
+            Console.WriteLine("FileStamp = " + fileStamp);
             updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
 
         }
 
-        public void printStatusMessage(string message){
+        public void printStatusMessage(string message)
+        {
 
-            lbStatusMessages.Items.Add("<"+DateTime.Now.ToShortTimeString() +"> "+ message);
-            
+            lbStatusMessages.Items.Add("<" + DateTime.Now.ToShortTimeString() + "> " + message);
+
 
         }
 
         private void button1_Click_1(object sender, RoutedEventArgs e)
         {
             ListViewItem lvi = new ListViewItem();
-       
+
 
 
         }
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader column = (sender as GridViewColumnHeader);
 
+
+            if (asc == true)
+            {
+                descending();
+                return;
+            }
+            else
+            {
+                lwFeed.Items.SortDescriptions.Clear();
+                lwFeed.Items.SortDescriptions.Add(new SortDescription("Kategori", ListSortDirection.Ascending));
+                lwFeed.Items.SortDescriptions.Add(new SortDescription("Namn", ListSortDirection.Ascending));
+                lwFeed.Items.SortDescriptions.Add(new SortDescription("Frekvens", ListSortDirection.Ascending));
+                asc = true;
+            }
 
         }
+
+        private void descending()
+        {
+
+            lwFeed.Items.SortDescriptions.Clear();
+            lwFeed.Items.SortDescriptions.Add(new SortDescription("Kategori", ListSortDirection.Descending));
+            lwFeed.Items.SortDescriptions.Add(new SortDescription("Namn", ListSortDirection.Descending));
+            lwFeed.Items.SortDescriptions.Add(new SortDescription("Frekvens", ListSortDirection.Descending));
+
+            asc = false;
+        }
     }
+}
 
  
-    }
+
+
