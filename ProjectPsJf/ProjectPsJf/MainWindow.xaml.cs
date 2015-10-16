@@ -535,6 +535,30 @@ namespace ProjectPsJf
         
    
         }
+
+        public void redigera(saveWindow save)
+        {
+            XDocument xDocEdit = new XDocument();
+            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+            string path = @"savedFeeds/" + chosenFile + ".XML";
+            Console.WriteLine(path);
+            xDocEdit = XDocument.Load(path);
+            xDocEdit.Root.Element("Kat").Value = save.tbKat.Text;
+            xDocEdit.Save(path);
+            showSavedFeeds();
+        }
+
+        private void btn_Redigera_Click_1(object sender, RoutedEventArgs e)
+        {
+
+            saveWindow saveWin = new saveWindow(textBox.Text, this);
+            saveWin.Show();
+            saveWin.tbNamn.Enabled = false;
+            saveWin.tbUppd.Enabled = false;
+
+        }
+
+        
     }
 }
 

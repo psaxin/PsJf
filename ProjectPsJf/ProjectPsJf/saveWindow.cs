@@ -31,9 +31,27 @@ namespace ProjectPsJf
 
         private void btnSpara_Click(object sender, EventArgs e)
         {
-            
-            mainForm.addToListBox(this);
-            this.Dispose();
+            if (tbNamn.Enabled == false)
+            {
+                mainForm.redigera(this);
+                this.Dispose();
+            }
+
+            else
+            {
+                mainForm.addToListBox(this);
+                this.Dispose();
+            }
+
+
+        }
+
+        private void btn_Redigera_Click(object sender, EventArgs e)
+        {
+
+
+            tbNamn.Enabled = false;
+            tbUppd.Enabled = false;
 
         }
      
