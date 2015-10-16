@@ -477,6 +477,11 @@ namespace ProjectPsJf
 
             asc = false;
         }
+
+        private void btnTEST_Click(object sender, RoutedEventArgs e)
+        {
+            HanteraRss.addPlayed(@"SavedFeeds\123.xml", "test 123");
+        }
     }
 }
 

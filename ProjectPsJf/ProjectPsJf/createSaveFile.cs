@@ -38,11 +38,19 @@ namespace ProjectPsJf
             XmlText text3 = doc.CreateTextNode(kat);
             element4.AppendChild(text3);
             element1.AppendChild(element4);
+
             XmlElement element5 = doc.CreateElement(string.Empty, "Frek", string.Empty);
             XmlText text4 = doc.CreateTextNode(frek);
             element5.AppendChild(text4);
-
             element1.AppendChild(element5);
+
+            XmlElement element6 = doc.CreateElement(string.Empty, "Played", string.Empty);
+
+            XmlElement element7 = doc.CreateElement(string.Empty, "ID", string.Empty);
+            element6.AppendChild(element7);
+
+
+            element1.AppendChild(element6);
 
             
             doc.Save(@"savedFeeds/" +name + ".xml");

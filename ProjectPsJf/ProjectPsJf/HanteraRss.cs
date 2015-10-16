@@ -14,7 +14,7 @@ namespace ProjectPsJf
         private static XDocument xDoc = new XDocument();
         private static XDocument xDocPath = new XDocument();
         private static List<listViewItems> xmlList = new List<listViewItems>();
-
+        private static XmlDocument rssXmlDoc = new XmlDocument();
         public static List<listViewItems> toXml(string url)
         {
             xmlList.Clear();
@@ -64,7 +64,7 @@ namespace ProjectPsJf
 
         public static string ParseToString(string urlin)
         {
-            XmlDocument rssXmlDoc = new XmlDocument();
+            
 
             // Load the RSS file from the RSS URL
             rssXmlDoc.Load(urlin);
@@ -105,6 +105,20 @@ namespace ProjectPsJf
             rssContent.Append("</rss>");
             // Return the string that contain the RSS items
             return rssContent.ToString();
+        }
+
+
+        public static void addPlayed(string path, string playedID) {
+
+            rssXmlDoc.Load(path);
+
+            XmlNode played = rssXmlDoc.DocumentElement.LastChild;
+            //XmlElement played = rssXmlDoc.DocumentElement.LastChild;
+            XmlElement ID = rssXmlDoc.CreateElement("ID");
+            ID.InnerText = playedID;
+            played.AppendChild(ID);
+            rssXmlDoc.Save(path);
+
         }
 
 
