@@ -77,7 +77,6 @@
         <Button x:Name="btnRemove" Content="Radera" HorizontalAlignment="Left" Margin="564,226,0,0" VerticalAlignment="Top" Width="75" Click="btnRemove_Click"/>
         <Label x:Name="lblSM" Content="Status Messages" HorizontalAlignment="Left" Margin="470,352,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbStatusMessages" HorizontalAlignment="Left" Height="128" Margin="470,383,0,0" VerticalAlignment="Top" Width="267"/>
-        <Button x:Name="btnTEST" Content="Button" HorizontalAlignment="Left" Margin="568,303,0,0" VerticalAlignment="Top" Width="75" Click="btnTEST_Click"/>
 
     </Grid>
 </Window>

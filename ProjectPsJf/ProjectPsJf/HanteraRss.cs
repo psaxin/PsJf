@@ -15,6 +15,8 @@ namespace ProjectPsJf
         private static XDocument xDocPath = new XDocument();
         private static List<listViewItems> xmlList = new List<listViewItems>();
         private static XmlDocument rssXmlDoc = new XmlDocument();
+
+
         public static List<listViewItems> toXml(string url)
         {
             xmlList.Clear();
@@ -35,7 +37,8 @@ namespace ProjectPsJf
                 
                 foreach (var i in newitems)
                 {
-                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url, Seen = false, Stamp = i.url});
+                   
+                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url, Seen = false, Stamp = "none"});
 
                 }
                
@@ -107,20 +110,61 @@ namespace ProjectPsJf
             return rssContent.ToString();
         }
 
-
+        //Lägger till en xml taggen <ID> i <Played> om den inte finns xml dokumentet
+        // parametern "path" är sökvägen för xml filen och "playedID" är värdet för <ID> som den vill lägga till
         public static void addPlayed(string path, string playedID) {
 
-            rssXmlDoc.Load(path);
-
-            XmlNode played = rssXmlDoc.DocumentElement.LastChild;
-            //XmlElement played = rssXmlDoc.DocumentElement.LastChild;
-            XmlElement ID = rssXmlDoc.CreateElement("ID");
-            ID.InnerText = playedID;
-            played.AppendChild(ID);
-            rssXmlDoc.Save(path);
+            bool exist = checkPlayedExist(getPlayed(path), playedID);
+            if (exist == false){
+                rssXmlDoc.Load(path);
+                XmlNode played = rssXmlDoc.DocumentElement.LastChild;
+                XmlElement ID = rssXmlDoc.CreateElement("ID");
+                ID.InnerText = playedID;
+                played.AppendChild(ID);
+                rssXmlDoc.Save(path);
+                Console.WriteLine("Första gången spelad");
+            }
+            else { Console.WriteLine("Redan spelad"); }
 
         }
 
 
+        //Denna metod gör en Lista med alla <ID> från xml dokumentet som tas i emot i parametern, dvs fileName
+        // ID representerar alltså de spelade filerna
+        public static List<string> getPlayed(string fileName)
+        {
+            
+                rssXmlDoc.Load(fileName);
+                XmlNodeList playedIdNodes = rssXmlDoc.SelectNodes("body/Played/ID");
+                List<string> playedList = new List<string>();
+
+                foreach (XmlNode ID in playedIdNodes)
+                {
+                    playedList.Add(ID.InnerText);
+                }
+                return playedList;
+           
+        }
+
+
+        //Denna metod tar emot en lista som den ska söka igenom och en string som är värdet den ska leta efter
+        //returnar true om "itemToCheck" finns i listan "played", annars false.
+        public static bool checkPlayedExist(List<string> played, string itemToCheck) {
+
+            foreach (string ID in played) {
+
+                if (ID == itemToCheck) {
+
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+
+
     }
 }
+

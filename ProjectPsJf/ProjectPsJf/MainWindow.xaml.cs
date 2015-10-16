@@ -62,7 +62,6 @@ namespace ProjectPsJf
 
         public void fyllLista()
         {
-            //hämtar text från textBox
             string rssUrl = textBox.Text;
 
 
@@ -155,17 +154,23 @@ namespace ProjectPsJf
 
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            string chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
-            //listViewDetails.Background = System.Windows.Media.Brushes.Beige;
-            playMedia(chosenFile);
+            string chosenItemOwner = (listViewDetails.SelectedItem as listViewItems).Stamp;
+            string chosenItemUrl = (listViewDetails.SelectedItem as listViewItems).URL;
+            string itemTitle = (listViewDetails.SelectedItem as listViewItems).Title;
+            if (chosenItemOwner != "none")
+            {
+                HanteraRss.addPlayed(@"SavedFeeds\" + chosenItemOwner + ".xml", itemTitle);
+                setPlayed(@"savedFeeds/src/" + chosenItemOwner + ".xml", chosenItemOwner);
+            }
+            playMedia(chosenItemUrl);
 
         }
 
         private void playMedia(string file)
         {
 
-            (listViewDetails.SelectedItem as listViewItems).Seen = true;
-            fyllLista();
+            //(listViewDetails.SelectedItem as listViewItems).Seen = true;
+            //fyllLista();
             if (file != currentFile)
             {
                 mediaPlayer.Open(new Uri(file));
@@ -217,12 +222,15 @@ namespace ProjectPsJf
 
         private void updateFeed(string chosenFile, string fileStamp)
         {
-
+            List<string> played = new List<string>();
+          
+                played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
+            
             if ((listViewDetails.Items.IsEmpty) == false)
             {
-                Console.WriteLine("filestamp = " + fileStamp + "GetItemAt = " + (listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp);
                 if ((listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp != fileStamp)
                 {
+                    
                     try
                     {
                         listViewDetails.Items.Clear();
@@ -240,15 +248,18 @@ namespace ProjectPsJf
                         //så länge items inte är tom..
                         if (newItems != null)
                         {
-                            //tömmer listboxen
+
                             listViewDetails.Items.Clear();
-                            //loopar igenom alla objekt i items.
+
+                          
                             foreach (var i in newItems)
                             {
-                                //lägger till i listen
-                                //Console.WriteLine(i.url);
-                                this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp });
-                                //listViewDetails.Items.Add.(i.title);
+                                bool seen = false;
+                                if (HanteraRss.checkPlayedExist(played,i.title)) {
+                                    seen = true;
+                                }
+
+                                this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Seen = seen, Stamp = fileStamp });
                             }
                         }
                         Console.WriteLine("Uppdaterade listan med " + chosenFile);
@@ -263,7 +274,7 @@ namespace ProjectPsJf
             }
             else if (listViewDetails.Items.Count == 0)
             {
-
+                
                 try
                 {
                     listViewDetails.Items.Clear();
@@ -281,15 +292,15 @@ namespace ProjectPsJf
                     //så länge items inte är tom..
                     if (newItems != null)
                     {
-                        //tömmer listboxen
-                        listViewDetails.Items.Clear();
-                        //loopar igenom alla objekt i items.
+                        listViewDetails.Items.Clear();   
                         foreach (var i in newItems)
                         {
-                            //lägger till i listen
-                            //Console.WriteLine(i.url);
-                            this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp });
-                            //listViewDetails.Items.Add.(i.title);
+                            bool seen = false;
+                            if (HanteraRss.checkPlayedExist(played, i.title))
+                            {
+                                seen = true;
+                            }
+                            this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Seen = seen});
                         }
                     }
 
@@ -303,14 +314,20 @@ namespace ProjectPsJf
             }
 
 
-
             else
             {
+                
                 listViewDetails.Items.Clear();
+
                 foreach (var i in items)
                 {
-                    this.listViewDetails.Items.Add(i);
+                    foreach (var x in played) {
+                        if (i.Title == x) {
+                            i.Seen = true;
+                        }
+                    }
 
+                    this.listViewDetails.Items.Add(i);
                 }
 
             }
@@ -427,8 +444,8 @@ namespace ProjectPsJf
         {
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
             string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
-            Console.WriteLine("FileStamp = " + fileStamp);
             updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
+            
 
         }
 
@@ -478,9 +495,45 @@ namespace ProjectPsJf
             asc = false;
         }
 
-        private void btnTEST_Click(object sender, RoutedEventArgs e)
-        {
-            HanteraRss.addPlayed(@"SavedFeeds\123.xml", "test 123");
+
+        private void setPlayed(string chosenFile, string fileStamp) {
+            List<string> played = new List<string>();
+            played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
+            try
+            {
+                listViewDetails.Items.Clear();
+                xDoc = XDocument.Load(chosenFile);
+                var newItems = (from x in xDoc.Descendants("item")
+                                select new
+                                {
+                                    title = x.Element("title").Value,
+                                    pubDate = x.Element("pubDate").Value,
+                                    url = (string)x.Element("enclosure").Attribute("url").Value,
+                                });
+
+                if (newItems != null)
+                {
+                    listViewDetails.Items.Clear();
+                    foreach (var i in newItems)
+                    {
+                        bool seen = false;
+                        if (HanteraRss.checkPlayedExist(played, i.title))
+                        {
+                            seen = true;
+                        }
+                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Seen = seen });
+                    }
+                }
+
+            }
+
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("URL fungerade ej");
+
+            }
+        
+   
         }
     }
 }
