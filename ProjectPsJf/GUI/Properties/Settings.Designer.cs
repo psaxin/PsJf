@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectPsJf.Properties
+namespace GUI.Properties
 {
 
 

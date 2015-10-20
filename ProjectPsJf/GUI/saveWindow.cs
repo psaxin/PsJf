@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
-namespace ProjectPsJf
+namespace GUI
 {
     public partial class saveWindow : Form
     {
         private MainWindow mainForm;
-      
-        public saveWindow (String url, MainWindow main): this()
+
+        public saveWindow(String url, MainWindow main)
+            : this()
         {
-            mainForm =  main;
+            mainForm = main;
             lblUrl.Text += " " + url;
 
         }
@@ -26,7 +27,7 @@ namespace ProjectPsJf
         {
 
             InitializeComponent();
-           
+
         }
 
         private void btnSpara_Click(object sender, EventArgs e)
@@ -54,7 +55,7 @@ namespace ProjectPsJf
             tbUppd.Enabled = false;
 
         }
-     
+
 
 
     }

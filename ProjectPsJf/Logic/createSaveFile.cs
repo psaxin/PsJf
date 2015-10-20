@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace ProjectPsJf
+namespace GUI
 {
-   public class createSaveFile
+    public class createSaveFile
     {
-       internal static void create(string name, string path, string kat, string frek)
+        public static void create(string name, string path, string kat, string frek)
         {
-        
+
 
             XmlDocument doc = new XmlDocument();
 
@@ -52,8 +52,8 @@ namespace ProjectPsJf
 
             element1.AppendChild(element6);
 
-            
-            doc.Save(@"savedFeeds/" +name + ".xml");
+
+            doc.Save(@"savedFeeds/" + name + ".xml");
         }
 
     }

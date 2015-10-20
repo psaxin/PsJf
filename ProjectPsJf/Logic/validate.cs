@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPsJf
+namespace GUI
 {
-    static class validate
+   public static class validate
     {
 
         //returnar true om en string är null
-        public static bool isEmpty(this string x){
+        public static bool isEmpty(this string x)
+        {
 
             return (x == null ? true : (x.Trim() == ""));
 
         }
-      
+
     }
 }

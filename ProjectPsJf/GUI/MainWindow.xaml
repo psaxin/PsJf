@@ -1,9 +1,9 @@
-﻿<Window x:Class="ProjectPsJf.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window x:Class="GUI.MainWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ProjectPsJf"
+        xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="Automatiserad RSS-läsare
         " Height="572.549" Width="777.941">
@@ -18,12 +18,12 @@
                     <GridViewColumn Header="Titel">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                            <TextBlock x:Name="Txt" Text="{Binding Title}" />
-                            <DataTemplate.Triggers>
+                                <TextBlock x:Name="Txt" Text="{Binding Title}" />
+                                <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding Seen}" Value="true">
-                                    <Setter TargetName="Txt" Property="Foreground" Value="Gray" />
-                                </DataTrigger>
-                            </DataTemplate.Triggers>
+                                        <Setter TargetName="Txt" Property="Foreground" Value="Gray" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

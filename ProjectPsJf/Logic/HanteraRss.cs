@@ -7,7 +7,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ProjectPsJf
+namespace GUI
 {
     public class HanteraRss
     {
@@ -23,33 +23,34 @@ namespace ProjectPsJf
             xDoc = XDocument.Load(url);
             //hämtar ut element från xDoc till en lista av objekt
             var newitems = (from x in xDoc.Descendants("item")
-                         select new
-                         {
-                             // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
+                            select new
+                            {
+                                // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
 
-                             title = x.Element("title").Value,
-                             pubDate = x.Element("pubDate").Value,
-                             url = (string)x.Element("enclosure").Attribute("url").Value,
-                         });
+                                title = x.Element("title").Value,
+                                pubDate = x.Element("pubDate").Value,
+                                url = (string)x.Element("enclosure").Attribute("url").Value,
+                            });
 
             if (newitems != null)
             {
-                
+
                 foreach (var i in newitems)
                 {
-                   
-                    xmlList.Add(new listViewItems{ Title = i.title, Date = i.pubDate, URL = i.url, Seen = false, Stamp = "none"});
+
+                    xmlList.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Seen = false, Stamp = "none" });
 
                 }
-               
+
             }
 
             return xmlList;
-      
+
         }
 
 
-        public static string getURL(string path) {
+        public static string getURL(string path)
+        {
             xDocPath = XDocument.Load(path);
             XNamespace atom = "http://www.w3.org/2005/Atom";
             path = xDocPath.Root.Element("channel").Element(atom + "link").Attribute("href").Value;
@@ -67,7 +68,7 @@ namespace ProjectPsJf
 
         public static string ParseToString(string urlin)
         {
-            
+
 
             // Load the RSS file from the RSS URL
             rssXmlDoc.Load(urlin);
@@ -112,10 +113,12 @@ namespace ProjectPsJf
 
         //Lägger till en xml taggen <ID> i <Played> om den inte finns xml dokumentet
         // parametern "path" är sökvägen för xml filen och "playedID" är värdet för <ID> som den vill lägga till
-        public static void addPlayed(string path, string playedID) {
+        public static void addPlayed(string path, string playedID)
+        {
 
             bool exist = checkPlayedExist(getPlayed(path), playedID);
-            if (exist == false){
+            if (exist == false)
+            {
                 rssXmlDoc.Load(path);
                 XmlNode played = rssXmlDoc.DocumentElement.LastChild;
                 XmlElement ID = rssXmlDoc.CreateElement("ID");
@@ -133,27 +136,30 @@ namespace ProjectPsJf
         // ID representerar alltså de spelade filerna
         public static List<string> getPlayed(string fileName)
         {
-            
-                rssXmlDoc.Load(fileName);
-                XmlNodeList playedIdNodes = rssXmlDoc.SelectNodes("body/Played/ID");
-                List<string> playedList = new List<string>();
 
-                foreach (XmlNode ID in playedIdNodes)
-                {
-                    playedList.Add(ID.InnerText);
-                }
-                return playedList;
-           
+            rssXmlDoc.Load(fileName);
+            XmlNodeList playedIdNodes = rssXmlDoc.SelectNodes("body/Played/ID");
+            List<string> playedList = new List<string>();
+
+            foreach (XmlNode ID in playedIdNodes)
+            {
+                playedList.Add(ID.InnerText);
+            }
+            return playedList;
+
         }
 
 
         //Denna metod tar emot en lista som den ska söka igenom och en string som är värdet den ska leta efter
         //returnar true om "itemToCheck" finns i listan "played", annars false.
-        public static bool checkPlayedExist(List<string> played, string itemToCheck) {
+        public static bool checkPlayedExist(List<string> played, string itemToCheck)
+        {
 
-            foreach (string ID in played) {
+            foreach (string ID in played)
+            {
 
-                if (ID == itemToCheck) {
+                if (ID == itemToCheck)
+                {
 
                     return true;
                 }

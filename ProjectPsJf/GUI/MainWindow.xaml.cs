@@ -23,7 +23,7 @@ using System.ComponentModel;
 
 using System.Drawing;
 
-namespace ProjectPsJf
+namespace GUI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -223,14 +223,14 @@ namespace ProjectPsJf
         private void updateFeed(string chosenFile, string fileStamp)
         {
             List<string> played = new List<string>();
-          
-                played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
-            
+
+            played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
+
             if ((listViewDetails.Items.IsEmpty) == false)
             {
                 if ((listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp != fileStamp)
                 {
-                    
+
                     try
                     {
                         listViewDetails.Items.Clear();
@@ -251,11 +251,12 @@ namespace ProjectPsJf
 
                             listViewDetails.Items.Clear();
 
-                          
+
                             foreach (var i in newItems)
                             {
                                 bool seen = false;
-                                if (HanteraRss.checkPlayedExist(played,i.title)) {
+                                if (HanteraRss.checkPlayedExist(played, i.title))
+                                {
                                     seen = true;
                                 }
 
@@ -274,7 +275,7 @@ namespace ProjectPsJf
             }
             else if (listViewDetails.Items.Count == 0)
             {
-                
+
                 try
                 {
                     listViewDetails.Items.Clear();
@@ -292,7 +293,7 @@ namespace ProjectPsJf
                     //så länge items inte är tom..
                     if (newItems != null)
                     {
-                        listViewDetails.Items.Clear();   
+                        listViewDetails.Items.Clear();
                         foreach (var i in newItems)
                         {
                             bool seen = false;
@@ -300,7 +301,7 @@ namespace ProjectPsJf
                             {
                                 seen = true;
                             }
-                            this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Seen = seen});
+                            this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Seen = seen });
                         }
                     }
 
@@ -316,13 +317,15 @@ namespace ProjectPsJf
 
             else
             {
-                
+
                 listViewDetails.Items.Clear();
 
                 foreach (var i in items)
                 {
-                    foreach (var x in played) {
-                        if (i.Title == x) {
+                    foreach (var x in played)
+                    {
+                        if (i.Title == x)
+                        {
                             i.Seen = true;
                         }
                     }
@@ -445,7 +448,7 @@ namespace ProjectPsJf
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
             string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
             updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
-            
+
 
         }
 
@@ -496,7 +499,8 @@ namespace ProjectPsJf
         }
 
 
-        private void setPlayed(string chosenFile, string fileStamp) {
+        private void setPlayed(string chosenFile, string fileStamp)
+        {
             List<string> played = new List<string>();
             played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
             try
@@ -532,8 +536,8 @@ namespace ProjectPsJf
                 MessageBox.Show("URL fungerade ej");
 
             }
-        
-   
+
+
         }
 
         public void redigera(saveWindow save)
@@ -558,10 +562,10 @@ namespace ProjectPsJf
 
         }
 
-        
+
     }
 }
 
- 
+
 
 

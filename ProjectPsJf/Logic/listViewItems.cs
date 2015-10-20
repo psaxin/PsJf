@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPsJf
+namespace GUI
 {
     //Denna klass används för att generera Items till listView
     public class listViewItems

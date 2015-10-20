@@ -11,11 +11,11 @@ using System.Security.Permissions;
 using System.Xml;
 using System.Net;
 
-namespace ProjectPsJf
+namespace GUI
 {
 
 
-    class UpdateSavedFeeds : Form
+   public class UpdateSavedFeeds : Form
     {
         private MainWindow mainForm;
         private int itteration = 0;
@@ -38,12 +38,13 @@ namespace ProjectPsJf
             setUpTable();
             startUpdateThread();
         }
-        private void setUpTable() {
+        private void setUpTable()
+        {
 
             minTabell = new string[9, 3];
-            
+
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
-            for (int i = 0; i< 9; i++)
+            for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j != 3; j++)
                 {
@@ -59,18 +60,18 @@ namespace ProjectPsJf
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
-        
+
         private string getName(string path)
         {
             int pos = path.LastIndexOf("\\") + 1;
             string newString = path.Substring(pos);
             return newString;
         }
-          
-        
+
+
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-           
+
 
             itteration++;
             collectSavedFiles();
@@ -82,7 +83,8 @@ namespace ProjectPsJf
             string temp;
             FileStream fs;
             int theTime = time;
-            for (int i =0; i<filePaths.Length; i++) {
+            for (int i = 0; i < filePaths.Length; i++)
+            {
 
 
                 filepath = minTabell[i, 0];
@@ -90,7 +92,7 @@ namespace ProjectPsJf
                 temp = HanteraRss.ParseToString(url);
                 //name = getName(element);
                 //frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
-                if (Int32.Parse(minTabell[i,1]) == Int32.Parse(minTabell[i, 2]))
+                if (Int32.Parse(minTabell[i, 1]) == Int32.Parse(minTabell[i, 2]))
                 {
                     Console.WriteLine("Ifen gick igenom på  " + itteration);
                     try
@@ -102,7 +104,7 @@ namespace ProjectPsJf
                         writer.Close();
                         fs.Close();
 
-                        mainForm.Dispatcher.BeginInvoke(new Action(delegate ()
+                        mainForm.Dispatcher.BeginInvoke(new Action(delegate()
                         {
                             //fs.getName är hela filepath, så vi kallar på metoden getName för att trimma strängen till filnamnet
                             mainForm.printStatusMessage("Uppdaterade " + getName(fs.Name));
@@ -130,23 +132,25 @@ namespace ProjectPsJf
                     minTabell[i, 2] = "0";
                 }
 
-                
+
             }
 
         }
 
-        private void addCurrentToAll() {
+        private void addCurrentToAll()
+        {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
             for (int i = 0; i < 9; i++)
             {
-                    int temp = Int32.Parse(minTabell[i,2]);
-                    temp++;
-                    minTabell[i, 2] = temp.ToString();
+                int temp = Int32.Parse(minTabell[i, 2]);
+                temp++;
+                minTabell[i, 2] = temp.ToString();
             }
 
         }
-        private void collectSavedFiles() {
+        private void collectSavedFiles()
+        {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
 
@@ -169,8 +173,8 @@ namespace ProjectPsJf
 
 
 
-        }
     }
+}
 
 
 

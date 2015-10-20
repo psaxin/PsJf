@@ -1,4 +1,4 @@
-﻿namespace ProjectPsJf
+﻿namespace GUI
 {
     partial class saveWindow
     {
@@ -140,8 +140,8 @@
 
         #endregion
 
-      
-     
+
+
         private System.Windows.Forms.Label lblNamn;
         public System.Windows.Forms.TextBox tbKat;
         private System.Windows.Forms.Label lblKat;

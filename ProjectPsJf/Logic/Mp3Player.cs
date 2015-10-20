@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPsJf
+namespace GUI
 {
 
     //denna klass används inte men kan behövas senare..
