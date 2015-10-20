@@ -15,10 +15,13 @@ namespace GUI
         private static XDocument xDocPath = new XDocument();
         private static List<listViewItems> xmlList = new List<listViewItems>();
         private static XmlDocument rssXmlDoc = new XmlDocument();
+        
 
 
         public static List<listViewItems> toXml(string url)
         {
+            if(validate.IsValidFeedUrl(url))
+            { 
             xmlList.Clear();
             xDoc = XDocument.Load(url);
             //hämtar ut element från xDoc till en lista av objekt
@@ -43,8 +46,13 @@ namespace GUI
                 }
 
             }
-
             return xmlList;
+            }
+
+            else
+            {
+                return xmlList;
+            }
 
         }
 

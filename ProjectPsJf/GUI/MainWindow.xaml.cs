@@ -194,20 +194,30 @@ namespace GUI
 
         public void addToListBox(saveWindow save)
         {
-            String feed = "";
-            feed += save.tbNamn.Text;
-            feed += save.tbKat.Text;
-            feed += save.tbUppd.Text;
-            //XDocument saveDoc = new XDocument();
-            //saveDoc = XDocument.Load(feed);
+
+            if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbKat.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
+                validate.isLetters(save.tbNamn.Text) && validate.isLetters(save.tbKat.Text) && validate.isDigit(save.tbUppd.Text)
+                )
+            {
+                String feed = "";
+                feed += save.tbNamn.Text;
+                feed += save.tbKat.Text;
+                feed += save.tbUppd.Text;
+                //XDocument saveDoc = new XDocument();
+                //saveDoc = XDocument.Load(feed);
 
 
-            lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
+                lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
 
-            //xDoc.Save(@"savedFeeds/src/" + save.tbNamn.Text + ".xml");
-            saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
-            //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
+                //xDoc.Save(@"savedFeeds/src/" + save.tbNamn.Text + ".xml");
+                saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
+                //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
+            }
 
+            else
+            {
+                printStatusMessage("Vänliga fyll i alla fält med efterfrågad data");
+            }
 
         }
         private void saveFeed(string name, string kat, string frek)
@@ -460,6 +470,7 @@ namespace GUI
 
         }
 
+         
         private void button1_Click_1(object sender, RoutedEventArgs e)
         {
             ListViewItem lvi = new ListViewItem();
@@ -559,6 +570,13 @@ namespace GUI
             saveWin.Show();
             saveWin.tbNamn.Enabled = false;
             saveWin.tbUppd.Enabled = false;
+
+        }
+
+        private void lwFeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            btn_Redigera.IsEnabled = true;
 
         }
 
