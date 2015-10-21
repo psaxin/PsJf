@@ -53,22 +53,18 @@ namespace GUI
 
             }
         }
-
         private void startUpdateThread()
         {
             var timer = new System.Timers.Timer(60000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
-
         private string getName(string path)
         {
             int pos = path.LastIndexOf("\\") + 1;
             string newString = path.Substring(pos);
             return newString;
         }
-
-
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
 
@@ -136,7 +132,6 @@ namespace GUI
             }
 
         }
-
         private void addCurrentToAll()
         {
 
@@ -170,8 +165,6 @@ namespace GUI
             }
 
         }
-
-
 
     }
 }

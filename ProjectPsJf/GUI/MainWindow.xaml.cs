@@ -43,7 +43,6 @@ namespace GUI
         DispatcherTimer timer = new DispatcherTimer();
         List<listViewItems> items;
         public Boolean asc;
-        //private Timer aTimer;
 
         public MainWindow()
         {
@@ -53,13 +52,11 @@ namespace GUI
             asc = false;
 
         }
-
         private void button_Click(object sender, RoutedEventArgs e)
         {
 
             fyllLista();
         }
-
         public void fyllLista()
         {
             string rssUrl = textBox.Text;
@@ -98,7 +95,6 @@ namespace GUI
             }
 
         }
-
         // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
         private void textBox_KeyUp(object sender, KeyEventArgs e)
         {
@@ -112,7 +108,6 @@ namespace GUI
                 button.IsEnabled = true;
             }
         }
-
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
 
@@ -121,7 +116,6 @@ namespace GUI
 
 
         }
-
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
 
@@ -130,19 +124,15 @@ namespace GUI
 
 
         }
-
-
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
             mediaPlayer.Pause();
         }
-
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
 
             mediaPlayer.Stop();
         }
-
         void timer_Tick(object sender, EventArgs e)
         {
             // , mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss")
@@ -151,7 +141,6 @@ namespace GUI
             else
                 lblStatus.Content = "No file selected...";
         }
-
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             string chosenItemOwner = (listViewDetails.SelectedItem as listViewItems).Stamp;
@@ -165,7 +154,6 @@ namespace GUI
             playMedia(chosenItemUrl);
 
         }
-
         private void playMedia(string file)
         {
 
@@ -191,7 +179,6 @@ namespace GUI
                 timer.Start();
             }
         }
-
         public void addToListBox(saveWindow save)
         {
 
@@ -229,7 +216,6 @@ namespace GUI
             xDoc.Save(@"savedFeeds/src/" + name + ".xml");
             //Console.WriteLine((listViewDetails.SelectedItem as listViewItems).URL);
         }
-
         private void updateFeed(string chosenFile, string fileStamp)
         {
             List<string> played = new List<string>();
@@ -346,9 +332,6 @@ namespace GUI
             }
 
         }
-
-
-
         private void showSavedFeeds()
         {
 
@@ -388,7 +371,6 @@ namespace GUI
                 //lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
             }
         }
-
         private void slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
@@ -396,7 +378,6 @@ namespace GUI
             mediaPlayer.Volume = newVolume;
 
         }
-
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             string path = "";
@@ -436,7 +417,6 @@ namespace GUI
             showSavedFeeds();
 
         }
-
         private void listViewDetails_GotMouseCapture(object sender, MouseEventArgs e)
         {
 
@@ -444,15 +424,11 @@ namespace GUI
             //chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
 
         }
-
         private void listViewDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
             btnPlay.IsEnabled = true;
         }
-
-
-
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
             string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
@@ -461,20 +437,10 @@ namespace GUI
 
 
         }
-
         public void printStatusMessage(string message)
         {
 
             lbStatusMessages.Items.Add("<" + DateTime.Now.ToShortTimeString() + "> " + message);
-
-
-        }
-
-         
-        private void button1_Click_1(object sender, RoutedEventArgs e)
-        {
-            ListViewItem lvi = new ListViewItem();
-
 
 
         }
@@ -497,7 +463,6 @@ namespace GUI
             }
 
         }
-
         private void descending()
         {
 
@@ -508,8 +473,6 @@ namespace GUI
 
             asc = false;
         }
-
-
         private void setPlayed(string chosenFile, string fileStamp)
         {
             List<string> played = new List<string>();
@@ -550,7 +513,6 @@ namespace GUI
 
 
         }
-
         public void redigera(saveWindow save)
         {
             XDocument xDocEdit = new XDocument();
@@ -562,7 +524,6 @@ namespace GUI
             xDocEdit.Save(path);
             showSavedFeeds();
         }
-
         private void btn_Redigera_Click_1(object sender, RoutedEventArgs e)
         {
 
@@ -572,15 +533,12 @@ namespace GUI
             saveWin.tbUppd.Enabled = false;
 
         }
-
         private void lwFeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
             btn_Redigera.IsEnabled = true;
 
         }
-
-
     }
 }
 

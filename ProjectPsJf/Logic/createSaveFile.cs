@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace GUI
 {
-    public class createSaveFile
+    public static class createSaveFile
     {
         public static void create(string name, string path, string kat, string frek)
         {
