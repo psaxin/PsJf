@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace GUI
 {
     //Denna klass används för att generera Items till listView
-    public class listViewItems
+        public class listViewItems
     {
         public string Title { get; set; }
         public string Date { get; set; }

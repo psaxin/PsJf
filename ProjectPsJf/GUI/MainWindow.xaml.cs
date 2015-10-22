@@ -61,27 +61,30 @@ namespace GUI
         {
             string rssUrl = textBox.Text;
 
-
-            if (listViewDetails.Items.Count == 0 || rssUrl != currentUrl)
+            if (validate.IsValidFeedUrl(rssUrl))
             {
-                try
+                printStatusMessage("Hämtade " + rssUrl);
+                if (listViewDetails.Items.Count == 0 || rssUrl != currentUrl)
                 {
-                    currentUrl = rssUrl;
-                    listViewDetails.Items.Clear();
-                    items = HanteraRss.toXml(rssUrl);
-
-                    foreach (var i in items)
+                    try
                     {
-                        this.listViewDetails.Items.Add(i);
+                        currentUrl = rssUrl;
+                        listViewDetails.Items.Clear();
+                        items = HanteraRss.toXml(rssUrl);
+                        //printStatusMessage("Hämtade " + rssUrl);
+                        foreach (var i in items)
+                        {
+                            this.listViewDetails.Items.Add(i);
+
+                        }
 
                     }
-
-                }
-                catch (System.Net.WebException)
-                {
-                    MessageBox.Show("URL fungerade ej");
-
-                }
+                    catch (System.Net.WebException)
+                    {
+                        MessageBox.Show("URL fungerade ej");
+                        printStatusMessage("URL fungerade ej");
+                    }
+                
             }
             else
             {
@@ -93,6 +96,8 @@ namespace GUI
                 }
 
             }
+        }
+            
 
         }
         // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
@@ -135,30 +140,29 @@ namespace GUI
         }
         void timer_Tick(object sender, EventArgs e)
         {
-            // , mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss")
+            Console.WriteLine(mediaPlayer.NaturalDuration.TimeSpan.ToString(@"hh\mm\ss"));
             if (mediaPlayer.Source != null)
-                lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"mm\:ss"), "Under konstruktion...");
+                lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"hh\:mm\:ss"), mediaPlayer.NaturalDuration.TimeSpan.ToString(@"hh\:mm\:ss"));
             else
                 lblStatus.Content = "No file selected...";
         }
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            string chosenItemOwner = (listViewDetails.SelectedItem as listViewItems).Stamp;
-            string chosenItemUrl = (listViewDetails.SelectedItem as listViewItems).URL;
-            string itemTitle = (listViewDetails.SelectedItem as listViewItems).Title;
-            if (chosenItemOwner != "none")
-            {
-                HanteraRss.addPlayed(@"SavedFeeds\" + chosenItemOwner + ".xml", itemTitle);
-                setPlayed(@"savedFeeds/src/" + chosenItemOwner + ".xml", chosenItemOwner);
+            if (listViewDetails.SelectedItem != null){
+                string chosenItemOwner = (listViewDetails.SelectedItem as listViewItems).Stamp;
+                string chosenItemUrl = (listViewDetails.SelectedItem as listViewItems).URL;
+                string itemTitle = (listViewDetails.SelectedItem as listViewItems).Title;
+                if (chosenItemOwner != "none")
+                {
+                    HanteraRss.addPlayed(@"SavedFeeds\" + chosenItemOwner + ".xml", itemTitle);
+                    setPlayed(@"savedFeeds/src/" + chosenItemOwner + ".xml", chosenItemOwner);
+                }
+                playMedia(chosenItemUrl);
+                lblFileName.Content = itemTitle;
             }
-            playMedia(chosenItemUrl);
-
         }
         private void playMedia(string file)
         {
-
-            //(listViewDetails.SelectedItem as listViewItems).Seen = true;
-            //fyllLista();
             if (file != currentFile)
             {
                 mediaPlayer.Open(new Uri(file));
@@ -168,9 +172,7 @@ namespace GUI
                 timer.Interval = TimeSpan.FromSeconds(1);
                 timer.Tick += timer_Tick;
                 timer.Start();
-            }
-
-
+            }           
             else
             {
                 mediaPlayer.Play();
@@ -190,15 +192,9 @@ namespace GUI
                 feed += save.tbNamn.Text;
                 feed += save.tbKat.Text;
                 feed += save.tbUppd.Text;
-                //XDocument saveDoc = new XDocument();
-                //saveDoc = XDocument.Load(feed);
-
-
                 lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
 
-                //xDoc.Save(@"savedFeeds/src/" + save.tbNamn.Text + ".xml");
                 saveFeed(save.tbNamn.Text, save.tbKat.Text, save.tbUppd.Text);
-                //saveDoc.Save(@"C:\Users\joaki_000\Desktop\C#\git\PsJf");
             }
 
             else
@@ -431,10 +427,12 @@ namespace GUI
         }
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
-            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-            string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
-            updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
-
+          
+            if (lwFeed.SelectedItem != null) {
+                string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+                string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
+                updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
+            }
 
         }
         public void printStatusMessage(string message)

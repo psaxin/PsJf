@@ -40,6 +40,7 @@ namespace GUI
         }
         private void setUpTable()
         {
+            
 
             minTabell = new string[9, 3];
 
