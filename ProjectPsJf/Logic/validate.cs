@@ -25,7 +25,7 @@ namespace GUI
 
         public static bool isDigit(string input)
         {
-            Regex regex = new Regex(@"^\d$");
+            Regex regex = new Regex(@"(?:\d*)?\d+");
             if(regex.IsMatch(input))
             {
                 return true;
