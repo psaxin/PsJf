@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace GUI
 {
-    public class HanteraRss
+    public class HanteraRss : Reader
     {
         private static XDocument xDoc = new XDocument();
         private static XDocument xDocPath = new XDocument();

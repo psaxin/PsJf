@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace GUI
 {
-    public static class createSaveFile
+   public class Profile : Isave
     {
-        public static void create(string name, string path, string kat, string frek)
+
+       public void save(string name, string path, string kat, string frek)
         {
-
-
             XmlDocument doc = new XmlDocument();
 
             //(1) the xml declaration is recommended, but not mandatory
