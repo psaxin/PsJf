@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace GUI
 {
-    public class HanteraRss : Reader
+    public class HanteraRss
     {
         private static XDocument xDoc = new XDocument();
         private static XDocument xDocPath = new XDocument();
@@ -41,7 +41,7 @@ namespace GUI
                 foreach (var i in newitems)
                 {
 
-                    xmlList.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Seen = false, Stamp = "none" });
+                    xmlList.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Played = false, Stamp = "none" });
 
                 }
 

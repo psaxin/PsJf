@@ -67,8 +67,6 @@ namespace GUI
                 this.listViewDetails.Items.Add(i);
             }
         }
-           
-        
         // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
         private void textBox_KeyUp(object sender, KeyEventArgs e)
         {
@@ -109,7 +107,6 @@ namespace GUI
         }
         void timer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine(mediaPlayer.NaturalDuration.TimeSpan.ToString(@"hh\mm\ss"));
             if (mediaPlayer.Source != null)
                 lblStatus.Content = String.Format("{0} / {1}", mediaPlayer.Position.ToString(@"hh\:mm\:ss"), mediaPlayer.NaturalDuration.TimeSpan.ToString(@"hh\:mm\:ss"));
             else
@@ -175,101 +172,29 @@ namespace GUI
             }
 
         }
+
         private void updateFeed(string chosenFile, string fileStamp)
         {
             List<string> played = new List<string>();
 
             played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
-
+            //körs om den inte är tom, detta är för att GetItemAt nedanför inte ska vara null och ge error.
             if ((listViewDetails.Items.IsEmpty) == false)
             {
+                //körs om den har en en annorlunda stamp
                 if ((listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp != fileStamp)
                 {
-
-                    try
-                    {
-                        listViewDetails.Items.Clear();
-                        xDoc = XDocument.Load(chosenFile);
-                        //hämtar ut element från xDoc till en lista av objekt
-                        var newItems = (from x in xDoc.Descendants("item")
-                                        select new
-                                        {
-                                            // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
-
-                                            title = x.Element("title").Value,
-                                            pubDate = x.Element("pubDate").Value,
-                                            url = (string)x.Element("enclosure").Attribute("url").Value,
-                                        });
-                        //så länge items inte är tom..
-                        if (newItems != null)
-                        {
-
-                            listViewDetails.Items.Clear();
-
-
-                            foreach (var i in newItems)
-                            {
-                                bool seen = false;
-                                if (HanteraRss.checkPlayedExist(played, i.title))
-                                {
-                                    seen = true;
-                                }
-
-                                this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Seen = seen, Stamp = fileStamp });
-                            }
-                        }
-                        Console.WriteLine("Uppdaterade listan med " + chosenFile);
-                    }
-
-                    catch (System.Net.WebException)
-                    {
-                        MessageBox.Show("URL fungerade ej");
-
-                    }
+                    fillFeedList(chosenFile,fileStamp,played);
                 }
             }
+            // körs den är tom
             else if (listViewDetails.Items.Count == 0)
             {
-
-                try
-                {
-                    listViewDetails.Items.Clear();
-                    xDoc = XDocument.Load(chosenFile);
-                    //hämtar ut element från xDoc till en lista av objekt
-                    var newItems = (from x in xDoc.Descendants("item")
-                                    select new
-                                    {
-                                        // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
-
-                                        title = x.Element("title").Value,
-                                        pubDate = x.Element("pubDate").Value,
-                                        url = (string)x.Element("enclosure").Attribute("url").Value,
-                                    });
-                    //så länge items inte är tom..
-                    if (newItems != null)
-                    {
-                        listViewDetails.Items.Clear();
-                        foreach (var i in newItems)
-                        {
-                            bool seen = false;
-                            if (HanteraRss.checkPlayedExist(played, i.title))
-                            {
-                                seen = true;
-                            }
-                            this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Seen = seen });
-                        }
-                    }
-
-                }
-
-                catch (System.Net.WebException)
-                {
-                    MessageBox.Show("URL fungerade ej");
-
-                }
+                fillFeedList(chosenFile, fileStamp, played);
             }
 
-
+            // denna kommer gå igenom om listan inte är tom och Stamp är lika. Det betyder att listan bara behöver uppdateras.
+            // tex om en låt är spelad och behöver få sin nya färg.
             else
             {
 
@@ -281,12 +206,51 @@ namespace GUI
                     {
                         if (i.Title == x)
                         {
-                            i.Seen = true;
+                            i.Played = true;
                         }
                     }
 
                     this.listViewDetails.Items.Add(i);
                 }
+
+            }
+
+        }
+
+        private void fillFeedList(string chosenFile, string fileStamp, List<string> playlist) {
+
+            try
+            {
+                listViewDetails.Items.Clear();
+                xDoc = XDocument.Load(chosenFile);
+                //hämtar ut element från xDoc till en lista av objekt
+                var newItems = (from x in xDoc.Descendants("item")
+                                select new
+                                {
+                                    // hämtar ut title element ur xdoc och ger objektet med namn title det värdet.
+                                    title = x.Element("title").Value,
+                                    pubDate = x.Element("pubDate").Value,
+                                    url = (string)x.Element("enclosure").Attribute("url").Value,
+                                });
+                //så länge items inte är tom..
+                if (newItems != null)
+                {
+                    listViewDetails.Items.Clear();
+                    foreach (var i in newItems)
+                    {
+                        bool played = false;
+                        if (HanteraRss.checkPlayedExist(playlist, i.title))
+                        {
+                            played = true;
+                        }
+                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Played = played, Stamp = fileStamp });
+                    }
+                }
+            }
+
+            catch (System.Net.WebException)
+            {
+                MessageBox.Show("URL fungerade ej");
 
             }
 
@@ -436,8 +400,8 @@ namespace GUI
         }
         private void setPlayed(string chosenFile, string fileStamp)
         {
-            List<string> played = new List<string>();
-            played = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
+            List<string> playlist = new List<string>();
+            playlist = HanteraRss.getPlayed(@"savedFeeds/" + fileStamp + ".xml");
             try
             {
                 listViewDetails.Items.Clear();
@@ -455,12 +419,12 @@ namespace GUI
                     listViewDetails.Items.Clear();
                     foreach (var i in newItems)
                     {
-                        bool seen = false;
-                        if (HanteraRss.checkPlayedExist(played, i.title))
+                        bool played = false;
+                        if (HanteraRss.checkPlayedExist(playlist, i.title))
                         {
-                            seen = true;
+                            played = true;
                         }
-                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Seen = seen });
+                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Played = played });
                     }
                 }
 

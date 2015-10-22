@@ -20,7 +20,7 @@
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Title}" />
                                 <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Seen}" Value="true">
+                                    <DataTrigger Binding="{Binding Played}" Value="true">
                                         <Setter TargetName="Txt" Property="Foreground" Value="Gray" />
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
@@ -32,7 +32,7 @@
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Date}" />
                                 <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Seen}" Value="true">
+                                    <DataTrigger Binding="{Binding Played}" Value="true">
                                         <Setter TargetName="Txt" Property="Foreground" Value="Gray" />
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
