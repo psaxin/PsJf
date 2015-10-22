@@ -37,7 +37,7 @@ namespace GUI
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private XDocument xDoc = new XDocument();
         private string currentFile = "";
-        private string currentUrl = "";
+        //private string currentUrl = "";
         public object MathHelper { get; private set; }
         private List<listViewItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
@@ -55,51 +55,21 @@ namespace GUI
         private void button_Click(object sender, RoutedEventArgs e)
         {
 
-            fyllLista();
+            fillListFromUrl();
         }
-        public void fyllLista()
+        private void fillListFromUrl()
         {
             string rssUrl = textBox.Text;
-
-            if (validate.IsValidFeedUrl(rssUrl))
+            //currentUrl = rssUrl;
+            listViewDetails.Items.Clear();
+            items = HanteraRss.toXml(rssUrl);
+            foreach (var i in items)
             {
-                printStatusMessage("Hämtade " + rssUrl);
-                if (listViewDetails.Items.Count == 0 || rssUrl != currentUrl)
-                {
-                    try
-                    {
-                        currentUrl = rssUrl;
-                        listViewDetails.Items.Clear();
-                        items = HanteraRss.toXml(rssUrl);
-                        //printStatusMessage("Hämtade " + rssUrl);
-                        foreach (var i in items)
-                        {
-                            this.listViewDetails.Items.Add(i);
-
-                        }
-
-                    }
-                    catch (System.Net.WebException)
-                    {
-                        MessageBox.Show("URL fungerade ej");
-                        printStatusMessage("URL fungerade ej");
-                    }
-                
-            }
-            else
-            {
-                listViewDetails.Items.Clear();
-                foreach (var i in items)
-                {
-                    this.listViewDetails.Items.Add(i);
-
-                }
-
+                this.listViewDetails.Items.Add(i);
             }
         }
-            
-
-        }
+           
+        
         // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
         private void textBox_KeyUp(object sender, KeyEventArgs e)
         {
