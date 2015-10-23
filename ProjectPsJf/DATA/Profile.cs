@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace GUI
+namespace Data
 {
-   public class Profile : Isave
+    /*
+         Klassen Profile är en subklass från interfacet Isave. Denna klass, dvs "Profile", används för att spara en xml-fil till datorn som håller
+         information om en sparad Profil.
+   */
+    public class Profile : Isave
     {
 
        public void save(string name, string path, string kat, string frek)

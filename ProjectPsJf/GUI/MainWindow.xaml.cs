@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.Data;
 using System.ComponentModel;
-using Microsoft.Win32;
 using System.Windows.Threading;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.ComponentModel;
-
-using System.Drawing;
+using Logic;
+using Data;
 
 namespace GUI
 {
@@ -32,8 +22,6 @@ namespace GUI
 
     public partial class MainWindow : Window
     {
-        // denna kodrad kommer behövas senare
-        //private ObservableCollection<listViewItems> minLista = new ObservableCollection<listViewItems>();
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private XDocument xDoc = new XDocument();
         private string currentFile = "";
@@ -51,11 +39,11 @@ namespace GUI
             asc = false;
 
         }
-        //
+
+        // Denna metod fyller en lista med items från en xml-fil som konverteras från en rss-url genom HanterRss.
         private void fillListFromUrl()
         {
             string rssUrl = tbUrl.Text;
-            //currentUrl = rssUrl;
             listViewDetails.Items.Clear();
             items = HanteraRss.toXml(rssUrl);
             foreach (var i in items)
@@ -63,6 +51,8 @@ namespace GUI
                 this.listViewDetails.Items.Add(i);
             }
         }
+
+        // Öppnar ett nytt fönster som används för att spara en profil
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
 
@@ -71,6 +61,7 @@ namespace GUI
 
 
         }
+        // Startar en ljudfil från en url i list Objekten
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
 
@@ -79,6 +70,7 @@ namespace GUI
 
 
         }
+        // Pausar den nuvarande spelningen.
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
             mediaPlayer.Pause();
@@ -88,6 +80,7 @@ namespace GUI
 
             mediaPlayer.Stop();
         }
+        // Stoppar den 
         void timer_Tick(object sender, EventArgs e)
         {
             if (mediaPlayer.Source != null)

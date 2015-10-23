@@ -73,7 +73,7 @@
             </ListView.View>
         </ListView>
         <Slider x:Name="slider" HorizontalAlignment="Left" Margin="357,476,0,0" VerticalAlignment="Top" Height="20" Width="75" Maximum="100" ValueChanged="slider_ValueChanged_1" Value="50"/>
-        <Label Content="lblVolym" HorizontalAlignment="Left" Margin="373,444,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblVolym" Content="Volym" HorizontalAlignment="Left" Margin="373,444,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnRemove" Content="Radera" HorizontalAlignment="Left" Margin="564,226,0,0" VerticalAlignment="Top" Width="75" Click="btnRemove_Click"/>
         <Label x:Name="lblSM" Content="Status Messages" HorizontalAlignment="Left" Margin="470,352,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbStatusMessages" HorizontalAlignment="Left" Height="128" Margin="453,383,0,0" VerticalAlignment="Top" Width="307"/>

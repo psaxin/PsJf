@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GUI
+namespace Logic
 {
     //Denna klass används för att generera Items till listView
       public abstract class ListItems  

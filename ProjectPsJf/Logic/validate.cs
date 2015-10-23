@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.ServiceModel.Syndication;
 
-namespace GUI
+namespace Logic
 {
    public static class validate
     

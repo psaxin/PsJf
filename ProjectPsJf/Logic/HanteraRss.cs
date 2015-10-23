@@ -7,7 +7,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace GUI
+namespace Logic
 {
     public class HanteraRss
     {

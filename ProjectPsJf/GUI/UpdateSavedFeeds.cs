@@ -10,7 +10,7 @@ using System.Timers;
 using System.Security.Permissions;
 using System.Xml;
 using System.Net;
-
+using Logic;
 namespace GUI
 {
 
