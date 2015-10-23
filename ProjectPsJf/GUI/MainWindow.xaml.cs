@@ -26,7 +26,6 @@ namespace GUI
         private XDocument xDoc = new XDocument();
         private string currentFile = "";
         public object MathHelper { get; private set; }
-        private List<ListItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
         List<ListItems> items;
         public Boolean asc;
@@ -39,7 +38,6 @@ namespace GUI
             asc = false;
 
         }
-
         // Denna metod fyller en lista med items från en xml-fil som konverteras från en rss-url genom HanterRss.
         private void fillListFromUrl()
         {
@@ -51,7 +49,6 @@ namespace GUI
                 this.listViewDetails.Items.Add(i);
             }
         }
-
         // Öppnar ett nytt fönster som används för att spara en profil
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -75,12 +72,13 @@ namespace GUI
         {
             mediaPlayer.Pause();
         }
+        // Stoppar den 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
 
             mediaPlayer.Stop();
         }
-        // Stoppar den 
+       // Metod som visar hur lång tid en fil spelats.
         void timer_Tick(object sender, EventArgs e)
         {
             if (mediaPlayer.Source != null)
@@ -88,6 +86,7 @@ namespace GUI
             else
                 lblStatus.Content = "No file selected...";
         }
+        // Metod skapad för att kunna spela upp en fil via dubbelklick på en lista, samt att "flaggar" i objektet att filen spelats.
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (listViewDetails.SelectedItem != null){
@@ -103,6 +102,7 @@ namespace GUI
                 lblFileName.Content = itemTitle;
             }
         }
+        // Metod för att spela upp en mediafil. Om den filen man markerat är ny så startar en ny uppspelning annars återupptar den en uppspelning.
         private void playMedia(string file)
         {
             if (file != currentFile)
@@ -123,6 +123,7 @@ namespace GUI
                 timer.Start();
             }
         }
+        // Metod för att spara ner två xml dokument, ett dokument som innehåller srcn till en podcast samt ett dokument som innehåller en "profil" där använder väljer uppdateringsintervall, kategori samt namn.
         public void addToListBox(saveWindow save)
         {
 
@@ -148,6 +149,7 @@ namespace GUI
             }
 
         }
+        // Metod används för att uppdatera listViewDetails. Om källan till uppdateringen är annorlunda mot den nuvarande så refreshas listan. Bakgrunden till refreshen är att man vill ha aktuella värden på t.ex played om en fil spelats.
         private void updateFeed(string chosenFile, string fileStamp)
         {
             List<string> played = new List<string>();
@@ -191,6 +193,7 @@ namespace GUI
             }
 
         }
+        // Anropas i updatefeed, den fill en lista med "feeds". Chosenfile är källan, filestamp används som markör för att se ifall listan redan hämtats. Playlist är en lista av alla sparade profiler.
         private void fillFeedList(string chosenFile, string fileStamp, List<string> playlist) {
 
             try
@@ -229,6 +232,7 @@ namespace GUI
             }
 
         }
+        // Metod för att visa alla feeds som sparats.
         private void showSavedFeeds()
         {
 
@@ -268,6 +272,7 @@ namespace GUI
                 //lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text });
             }
         }
+        // Metod för att kunna höja och sänka ljudet under spelning av en fil.
         private void slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
@@ -275,6 +280,7 @@ namespace GUI
             mediaPlayer.Volume = newVolume;
 
         }
+        // Metod för att kunna ta bort en sparad feed.
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             string path = "";
@@ -314,18 +320,13 @@ namespace GUI
             showSavedFeeds();
 
         }
-        private void listViewDetails_GotMouseCapture(object sender, MouseEventArgs e)
-        {
-
-            btnPlay.IsEnabled = true;
-            //chosenFile = (listViewDetails.SelectedItem as listViewItems).URL;
-
-        }
+        // Metod för att kontrollera så ett list item har blivit markerat, om så är fallet blir btn_play enabled.
         private void listViewDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
             btnPlay.IsEnabled = true;
         }
+        // Metod för att uppdatera listviewdetails med information från en sparad feed ifrån en vald profil.
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
           
@@ -336,6 +337,7 @@ namespace GUI
             }
 
         }
+        // Metod som fungerar som feedback till användaren.
         public void printStatusMessage(string message)
         {
 
@@ -343,6 +345,7 @@ namespace GUI
 
 
         }
+        // Metod för att kunna sortera i bland sparade feeds.
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
 
@@ -362,6 +365,7 @@ namespace GUI
             }
 
         }
+        // Metod för att kunna sortera i bland sparade feeds.
         private void descending()
         {
 
@@ -372,6 +376,7 @@ namespace GUI
 
             asc = false;
         }
+        // Metod som anropas när ett objekt har spelats, och markerar det som "spelat".
         private void setPlayed(string chosenFile, string fileStamp)
         {
             List<string> playlist = new List<string>();
@@ -412,6 +417,7 @@ namespace GUI
 
 
         }
+        // Metod som möjliggör ändring av kategori av en sparad feed.
         public void redigera(saveWindow save)
         {
             XDocument xDocEdit = new XDocument();
@@ -423,6 +429,7 @@ namespace GUI
             xDocEdit.Save(path);
             showSavedFeeds();
         }
+        // Metod som möjliggör ändring av kategori av en sparad feed.
         private void btn_Redigera_Click_1(object sender, RoutedEventArgs e)
         {
 
@@ -432,12 +439,14 @@ namespace GUI
             saveWin.tbUppd.Enabled = false;
 
         }
+        // Metod som kontrollerar att en sparad feed blivit markerad.
         private void lwFeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
             btn_Redigera.IsEnabled = true;
 
         }
+        // Metod för att hämta en url från en textbox
         private void btn_getUrl_Click(object sender, RoutedEventArgs e)
         {
             fillListFromUrl();

@@ -21,23 +21,22 @@ namespace GUI
         private int itteration = 0;
         private int time = 0;
         private string url;
-        private string name;
-        private string frekvens;
         private string filepath;
         private static string[,] minTabell;
         private XDocument tempXDoc = new XDocument();
-
+        // Konstruktor kallas ifrån MainWindows konstruktor, så körs direkt när exe filen körs.
         public UpdateSavedFeeds(MainWindow main)
         {
             mainForm = main;
             initialize();
         }
-
+        // Bygger klassen
         private void initialize()
         {
             setUpTable();
             startUpdateThread();
         }
+        // Fyller en tvådimensionell array med alla sparade profiler.
         private void setUpTable()
         {
             
@@ -54,18 +53,21 @@ namespace GUI
 
             }
         }
+        // Startar en ny tråd som ska som kör funktionen onTimedEvent varje minut.
         private void startUpdateThread()
         {
             var timer = new System.Timers.Timer(60000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
+        // Trimmar en src till bara "filnamnet" t.ex savedFeeds\\src\\namn till namn.
         private string getName(string path)
         {
             int pos = path.LastIndexOf("\\") + 1;
             string newString = path.Substring(pos);
             return newString;
         }
+        // Syftet med denna metod är att möjliggöra att en podcast hämtas efter användares angivna frekvens.
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
 
@@ -133,6 +135,7 @@ namespace GUI
             }
 
         }
+        // Syftet med metoden är att ge alla objekt i den statiska arrayn ett inkrement. Detta inkrement jämnförs mot det angivna frekvensen. Den ska alltså immitera ett tidtagare.
         private void addCurrentToAll()
         {
 
@@ -145,6 +148,7 @@ namespace GUI
             }
 
         }
+
         private void collectSavedFiles()
         {
 
@@ -156,6 +160,7 @@ namespace GUI
             }
 
         }
+
         private void collectFrek()
         {
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
