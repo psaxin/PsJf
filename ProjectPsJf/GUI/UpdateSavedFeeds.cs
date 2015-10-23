@@ -89,8 +89,7 @@ namespace GUI
                 filepath = minTabell[i, 0];
                 url = HanteraRss.getURL(filepath);
                 temp = HanteraRss.ParseToString(url);
-                //name = getName(element);
-                //frekvens = HanteraRss.getFrek(@"savedFeeds\" + getName(element));
+               
                 if (Int32.Parse(minTabell[i, 1]) == Int32.Parse(minTabell[i, 2]))
                 {
                     Console.WriteLine("Ifen gick igenom på  " + itteration);
@@ -105,7 +104,7 @@ namespace GUI
 
                         mainForm.Dispatcher.BeginInvoke(new Action(delegate()
                         {
-                            //fs.getName är hela filepath, så vi kallar på metoden getName för att trimma strängen till filnamnet
+                            //fs.Name är hela filepath, så vi kallar på metoden getName för att trimma strängen till filnamnet
                             mainForm.printStatusMessage("Uppdaterade " + getName(fs.Name));
                         }));
                     }
@@ -148,12 +147,12 @@ namespace GUI
             }
 
         }
-
+        // fyller på minTabell med sparade filer
         private void collectSavedFiles()
         {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
-
+            
             for (int i = 0; i < filePaths.Length; i++)
             {
                 minTabell[i, 0] = filePaths[i];
@@ -161,6 +160,7 @@ namespace GUI
 
         }
 
+        // fyller alla listor i minTabell med index 2, med en frekvens
         private void collectFrek()
         {
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
