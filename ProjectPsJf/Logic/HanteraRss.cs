@@ -13,12 +13,12 @@ namespace GUI
     {
         private static XDocument xDoc = new XDocument();
         private static XDocument xDocPath = new XDocument();
-        private static List<listViewItems> xmlList = new List<listViewItems>();
+        private static List<ListItems> xmlList = new List<ListItems>();
         private static XmlDocument rssXmlDoc = new XmlDocument();
         
 
 
-        public static List<listViewItems> toXml(string url)
+        public static List<ListItems> toXml(string url)
         {
             if(validate.IsValidFeedUrl(url))
             { 
@@ -41,7 +41,7 @@ namespace GUI
                 foreach (var i in newitems)
                 {
 
-                    xmlList.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Played = false, Stamp = "none" });
+                    xmlList.Add(new FeedItems { Title = i.title, Date = i.pubDate, URL = i.url, Played = false, Stamp = "none" });
 
                 }
 

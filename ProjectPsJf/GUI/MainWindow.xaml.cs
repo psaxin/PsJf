@@ -38,9 +38,9 @@ namespace GUI
         private XDocument xDoc = new XDocument();
         private string currentFile = "";
         public object MathHelper { get; private set; }
-        private List<listViewItems> xmlList;
+        private List<ListItems> xmlList;
         DispatcherTimer timer = new DispatcherTimer();
-        List<listViewItems> items;
+        List<ListItems> items;
         public Boolean asc;
 
         public MainWindow()
@@ -51,14 +51,10 @@ namespace GUI
             asc = false;
 
         }
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-
-            fillListFromUrl();
-        }
+        //
         private void fillListFromUrl()
         {
-            string rssUrl = textBox.Text;
+            string rssUrl = tbUrl.Text;
             //currentUrl = rssUrl;
             listViewDetails.Items.Clear();
             items = HanteraRss.toXml(rssUrl);
@@ -67,23 +63,10 @@ namespace GUI
                 this.listViewDetails.Items.Add(i);
             }
         }
-        // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
-        private void textBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            //testar validator klassen
-            if (textBox.Text.isEmpty())
-            {
-                button.IsEnabled = false;
-            }
-            else
-            {
-                button.IsEnabled = true;
-            }
-        }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
 
-            saveWindow saveWin = new saveWindow(textBox.Text, this);
+            saveWindow saveWin = new saveWindow(tbUrl.Text, this);
             saveWin.Show();
 
 
@@ -92,7 +75,7 @@ namespace GUI
         {
 
 
-            playMedia((listViewDetails.SelectedItem as listViewItems).URL);
+            playMedia((listViewDetails.SelectedItem as ListItems).URL);
 
 
         }
@@ -115,9 +98,9 @@ namespace GUI
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (listViewDetails.SelectedItem != null){
-                string chosenItemOwner = (listViewDetails.SelectedItem as listViewItems).Stamp;
-                string chosenItemUrl = (listViewDetails.SelectedItem as listViewItems).URL;
-                string itemTitle = (listViewDetails.SelectedItem as listViewItems).Title;
+                string chosenItemOwner = (listViewDetails.SelectedItem as ListItems).Stamp;
+                string chosenItemUrl = (listViewDetails.SelectedItem as ListItems).URL;
+                string itemTitle = (listViewDetails.SelectedItem as ListItems).Title;
                 if (chosenItemOwner != "none")
                 {
                     HanteraRss.addPlayed(@"SavedFeeds\" + chosenItemOwner + ".xml", itemTitle);
@@ -158,12 +141,12 @@ namespace GUI
                 feed += save.tbNamn.Text;
                 feed += save.tbKat.Text;
                 feed += save.tbUppd.Text;
-                lwFeed.Items.Add(new listViewItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
+                lwSavedFeeds.Items.Add(new SavedItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
 
                 Profile saveProfile = new Profile();
                 Feed saveFeed = new Feed();
-                saveProfile.save(save.tbNamn.Text, textBox.Text, save.tbKat.Text, save.tbUppd.Text);
-                saveFeed.save(save.tbNamn.Text, textBox.Text, save.tbKat.Text, save.tbUppd.Text);
+                saveProfile.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
+                saveFeed.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
             }
 
             else
@@ -172,7 +155,6 @@ namespace GUI
             }
 
         }
-
         private void updateFeed(string chosenFile, string fileStamp)
         {
             List<string> played = new List<string>();
@@ -182,7 +164,7 @@ namespace GUI
             if ((listViewDetails.Items.IsEmpty) == false)
             {
                 //körs om den har en en annorlunda stamp
-                if ((listViewDetails.Items.GetItemAt(0) as listViewItems).Stamp != fileStamp)
+                if ((listViewDetails.Items.GetItemAt(0) as ListItems).Stamp != fileStamp)
                 {
                     fillFeedList(chosenFile,fileStamp,played);
                 }
@@ -216,7 +198,6 @@ namespace GUI
             }
 
         }
-
         private void fillFeedList(string chosenFile, string fileStamp, List<string> playlist) {
 
             try
@@ -243,7 +224,7 @@ namespace GUI
                         {
                             played = true;
                         }
-                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Played = played, Stamp = fileStamp });
+                        this.listViewDetails.Items.Add(new FeedItems { Title = i.title, Date = i.pubDate, URL = i.url, Played = played, Stamp = fileStamp });
                     }
                 }
             }
@@ -259,7 +240,7 @@ namespace GUI
         {
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
-            lwFeed.Items.Clear();
+            lwSavedFeeds.Items.Clear();
             foreach (string element in filePaths)
             {
                 try
@@ -279,7 +260,7 @@ namespace GUI
                     {
                         foreach (var i in items)
                         {
-                            lwFeed.Items.Add(new listViewItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek, Stamp = i.name });
+                            lwSavedFeeds.Items.Add(new SavedItems { Namn = i.name, Kategori = i.kat, Frekvens = i.frek, Stamp = i.name });
 
                         }
                     }
@@ -307,7 +288,7 @@ namespace GUI
             string pathSrc = "";
             try
             {
-                string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+                string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
                 path = @"savedFeeds/" + chosenFile + ".XML";
                 pathSrc = @"savedFeeds/src/" + chosenFile + ".xml";
             }
@@ -355,9 +336,9 @@ namespace GUI
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
           
-            if (lwFeed.SelectedItem != null) {
-                string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
-                string fileStamp = (lwFeed.SelectedItem as listViewItems).Stamp;
+            if (lwSavedFeeds.SelectedItem != null) {
+                string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
+                string fileStamp = (lwSavedFeeds.SelectedItem as ListItems).Stamp;
                 updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
             }
 
@@ -380,10 +361,10 @@ namespace GUI
             }
             else
             {
-                lwFeed.Items.SortDescriptions.Clear();
-                lwFeed.Items.SortDescriptions.Add(new SortDescription("Kategori", ListSortDirection.Ascending));
-                lwFeed.Items.SortDescriptions.Add(new SortDescription("Namn", ListSortDirection.Ascending));
-                lwFeed.Items.SortDescriptions.Add(new SortDescription("Frekvens", ListSortDirection.Ascending));
+                lwSavedFeeds.Items.SortDescriptions.Clear();
+                lwSavedFeeds.Items.SortDescriptions.Add(new SortDescription("Kategori", ListSortDirection.Ascending));
+                lwSavedFeeds.Items.SortDescriptions.Add(new SortDescription("Namn", ListSortDirection.Ascending));
+                lwSavedFeeds.Items.SortDescriptions.Add(new SortDescription("Frekvens", ListSortDirection.Ascending));
                 asc = true;
             }
 
@@ -391,10 +372,10 @@ namespace GUI
         private void descending()
         {
 
-            lwFeed.Items.SortDescriptions.Clear();
-            lwFeed.Items.SortDescriptions.Add(new SortDescription("Kategori", ListSortDirection.Descending));
-            lwFeed.Items.SortDescriptions.Add(new SortDescription("Namn", ListSortDirection.Descending));
-            lwFeed.Items.SortDescriptions.Add(new SortDescription("Frekvens", ListSortDirection.Descending));
+            lwSavedFeeds.Items.SortDescriptions.Clear();
+            lwSavedFeeds.Items.SortDescriptions.Add(new SortDescription("Kategori", ListSortDirection.Descending));
+            lwSavedFeeds.Items.SortDescriptions.Add(new SortDescription("Namn", ListSortDirection.Descending));
+            lwSavedFeeds.Items.SortDescriptions.Add(new SortDescription("Frekvens", ListSortDirection.Descending));
 
             asc = false;
         }
@@ -424,7 +405,7 @@ namespace GUI
                         {
                             played = true;
                         }
-                        this.listViewDetails.Items.Add(new listViewItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Played = played });
+                        this.listViewDetails.Items.Add(new FeedItems { Title = i.title, Date = i.pubDate, URL = i.url, Stamp = fileStamp, Played = played });
                     }
                 }
 
@@ -441,7 +422,7 @@ namespace GUI
         public void redigera(saveWindow save)
         {
             XDocument xDocEdit = new XDocument();
-            string chosenFile = (lwFeed.SelectedItem as listViewItems).Namn;
+            string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
             string path = @"savedFeeds/" + chosenFile + ".XML";
             Console.WriteLine(path);
             xDocEdit = XDocument.Load(path);
@@ -452,7 +433,7 @@ namespace GUI
         private void btn_Redigera_Click_1(object sender, RoutedEventArgs e)
         {
 
-            saveWindow saveWin = new saveWindow(textBox.Text, this);
+            saveWindow saveWin = new saveWindow(tbUrl.Text, this);
             saveWin.Show();
             saveWin.tbNamn.Enabled = false;
             saveWin.tbUppd.Enabled = false;
@@ -463,6 +444,23 @@ namespace GUI
 
             btn_Redigera.IsEnabled = true;
 
+        }
+        private void btn_getUrl_Click(object sender, RoutedEventArgs e)
+        {
+            fillListFromUrl();
+        }
+        // En eventlistener för att göra "realtids" validering av textBoxen för "URL"
+        private void tbUrl_KeyUp(object sender, KeyEventArgs e)
+        {
+            //testar validator klassen
+            if (tbUrl.Text.isEmpty())
+            {
+                btn_getUrl.IsEnabled = false;
+            }
+            else
+            {
+                btn_getUrl.IsEnabled = true;
+            }
         }
     }
 }

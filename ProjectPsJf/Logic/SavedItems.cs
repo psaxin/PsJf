@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace GUI
 {
-    public class Class1
+     public class SavedItems : ListItems
     {
+        public string Frekvens { get; set; }
+        public string Kategori { get; set; }
+        
     }
 }

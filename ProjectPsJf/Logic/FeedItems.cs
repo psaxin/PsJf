@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic
+namespace GUI
 {
-    public class Class1
+    public class FeedItems : ListItems
     {
+        public string Date { get; set; }
+
     }
 }
