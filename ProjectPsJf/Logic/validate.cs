@@ -85,6 +85,5 @@ namespace Logic
 
             return isValid;
         }       
-
     }
 }

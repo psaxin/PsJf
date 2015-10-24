@@ -19,6 +19,5 @@ namespace Data
             xDoc = XDocument.Load(path);
             xDoc.Save(@"savedFeeds/src/" + name + ".xml");
         }
-
     }
 }

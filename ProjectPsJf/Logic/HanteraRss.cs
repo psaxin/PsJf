@@ -15,7 +15,6 @@ namespace Logic
         private static XDocument xDocPath = new XDocument();
         private static List<ListItems> xmlList = new List<ListItems>();
         private static XmlDocument rssXmlDoc = new XmlDocument();
-        
         // Syftet är att skapa ett Xdoc ifrån urln i parameter listan.
         public static List<ListItems> toXml(string url)
         {
@@ -71,11 +70,11 @@ namespace Logic
             frek = xDocPath.Root.Element("Frek").Value;
             return frek;
         }
-        // 
-        public static string ParseToString(string urlin)
+        // Funktionens syfte är att omvandla ett rss dokument till en sträng.
+        public static string ParseToString(string rssin)
         {
             // Load the RSS file from the RSS URL
-            rssXmlDoc.Load(urlin);
+            rssXmlDoc.Load(rssin);
             // Parse the Items in the RSS file
             XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss");
             StringBuilder rssContent = new StringBuilder();
