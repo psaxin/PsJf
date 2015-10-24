@@ -16,8 +16,7 @@ namespace Logic
         private static List<ListItems> xmlList = new List<ListItems>();
         private static XmlDocument rssXmlDoc = new XmlDocument();
         
-
-
+        // Syftet är att skapa ett Xdoc ifrån urln i parameter listan.
         public static List<ListItems> toXml(string url)
         {
             if(validate.IsValidFeedUrl(url))
@@ -55,8 +54,7 @@ namespace Logic
             }
 
         }
-
-
+        // Syftet med funktion för att dra ut urln ifrån ett XDocument.
         public static string getURL(string path)
         {
             xDocPath = XDocument.Load(path);
@@ -64,7 +62,7 @@ namespace Logic
             path = xDocPath.Root.Element("channel").Element(atom + "link").Attribute("href").Value;
             return path;
         }
-
+        // Syftet med nedan funktion är att dra ut frekvensen ifrån ett XDoc.
         public static string getFrek(string path)
         {
             string frek;
@@ -73,21 +71,14 @@ namespace Logic
             frek = xDocPath.Root.Element("Frek").Value;
             return frek;
         }
-
+        // 
         public static string ParseToString(string urlin)
         {
-
-
             // Load the RSS file from the RSS URL
             rssXmlDoc.Load(urlin);
-
             // Parse the Items in the RSS file
-            //XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
             XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss");
-
             StringBuilder rssContent = new StringBuilder();
-
-
             // Iterate through the items in the RSS file
             rssContent.Append("<?xml version='1.0' encoding='UTF-8'?>");
             rssContent.Append("<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>");
@@ -97,20 +88,6 @@ namespace Logic
                 XmlNode rssSubNode = rssNode.SelectSingleNode("channel");
                 string channel = rssSubNode != null ? rssSubNode.InnerXml : "";
 
-                //XmlNode rssSubNode = rssNode.SelectSingleNode("title");
-                //string title = rssSubNode != null ? rssSubNode.InnerText : "";
-
-                //rssSubNode = rssNode.SelectSingleNode("link");
-                //string link = rssSubNode != null ? rssSubNode.InnerText : "";
-
-                //rssSubNode = rssNode.SelectSingleNode("description");
-                //string description = rssSubNode != null ? rssSubNode.InnerText : "";
-
-
-                //rssSubNode = rssNode.SelectSingleNode("//enclosure/@url");
-                //string urlout = rssSubNode != null ? rssSubNode.InnerText : "";
-                ////(string)x.Element("enclosure").Attribute("url").Value,
-                //rssContent.Append("<item><title>"+ title + "</title><enclosure>"+ urlout +"</enclosure></item>");
                 rssContent.Append(channel);
             }
             rssContent.Append("</channel>");
@@ -118,7 +95,6 @@ namespace Logic
             // Return the string that contain the RSS items
             return rssContent.ToString();
         }
-
         //Lägger till en xml taggen <ID> i <Played> om den inte finns xml dokumentet
         // parametern "path" är sökvägen för xml filen och "playedID" är värdet för <ID> som den vill lägga till
         public static void addPlayed(string path, string playedID)
@@ -138,9 +114,7 @@ namespace Logic
             else { Console.WriteLine("Redan spelad"); }
 
         }
-
-
-        //Denna metod gör en Lista med alla <ID> från xml dokumentet som tas i emot i parametern, dvs fileName
+        // Denna metod gör en Lista med alla <ID> från xml dokumentet som tas i emot i parametern, dvs fileName
         // ID representerar alltså de spelade filerna
         public static List<string> getPlayed(string fileName)
         {
@@ -156,8 +130,6 @@ namespace Logic
             return playedList;
 
         }
-
-
         //Denna metod tar emot en lista som den ska söka igenom och en string som är värdet den ska leta efter
         //returnar true om "itemToCheck" finns i listan "played", annars false.
         public static bool checkPlayedExist(List<string> played, string itemToCheck)
@@ -176,8 +148,6 @@ namespace Logic
             return false;
 
         }
-
-
 
     }
 }

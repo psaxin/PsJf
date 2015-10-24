@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
+    // Implementerar klassen ListItems.
     public class FeedItems : ListItems
     {
         public string Date { get; set; }
-
     }
 }
