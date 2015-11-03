@@ -14,17 +14,15 @@ namespace Data
    */
     public class Profile : Isave
     {
-
-       public void save(string name, string path, string kat, string frek)
+        //Syftet med denna metod är att skapa och spara ner en xml fil
+        public void save(string name, string path, string kat, string frek)
         {
             XmlDocument doc = new XmlDocument();
-
-            //(1) the xml declaration is recommended, but not mandatory
+            
             XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
             XmlElement root = doc.DocumentElement;
             doc.InsertBefore(xmlDeclaration, root);
 
-            //(2) string.Empty makes cleaner code
             XmlElement element1 = doc.CreateElement(string.Empty, "body", string.Empty);
             doc.AppendChild(element1);
 

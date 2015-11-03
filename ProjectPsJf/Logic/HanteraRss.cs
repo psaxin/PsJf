@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 namespace Logic
 {
     public class HanteraRss
@@ -67,7 +68,6 @@ namespace Logic
         {
             string frek;
             xDocPath = XDocument.Load(path);
-            //Console.WriteLine(path);
             frek = xDocPath.Root.Element("Frek").Value;
             return frek;
         }
@@ -109,9 +109,9 @@ namespace Logic
                 ID.InnerText = playedID;
                 played.AppendChild(ID);
                 rssXmlDoc.Save(path);
-                Console.WriteLine("Första gången spelad");
+                
             }
-            else { Console.WriteLine("Redan spelad"); }
+ 
 
         }
         // Denna metod gör en Lista med alla <ID> från xml dokumentet som tas i emot i parametern, dvs fileName
@@ -147,7 +147,7 @@ namespace Logic
             return false;
 
         }
-
+        //Syftet med denna metod är att kunna lägga till en ny kategori
         public static void addCategory(string newCategory) {
 
             XElement doc = XElement.Load(@"savedFeeds/cat/cat.xml");
@@ -155,6 +155,7 @@ namespace Logic
             doc.Add(new XElement("category",new XAttribute("name", newCategory)));
             doc.Save(@"savedFeeds/cat/cat.xml");
         }
+        //Syftet med denna metod är att kunna ta bort en kategori
         public static void removeCategory(string category) {
 
             XElement doc = XElement.Load(@"savedFeeds/cat/cat.xml");
@@ -169,7 +170,7 @@ namespace Logic
             }
             doc.Save(@"savedFeeds/cat/cat.xml");
         }
-
+        //Syftet med denna metod är att kunna editera en kategori
         public static void editCategory(string name, string newName) {
 
 
@@ -185,7 +186,7 @@ namespace Logic
             doc.Save(@"savedFeeds/cat/cat.xml");
 
         }
-
+        //Syftet med denna metod är att kunna lägga ta bort en fil
         public static void removeFile(string path,string pathSrc)
         {
             try
@@ -196,33 +197,37 @@ namespace Logic
                     File.Delete(pathSrc);
                     
                 }
-                else
-                {
-                    Console.WriteLine("filen finns ej");
-                }
+            
             }
             catch (Exception re)
             {
 
-                Console.WriteLine(re);
+                throw re;
             }
 
         }
-
-
+        //Syftet med denna metod är att kunna ta bort en feeds kategori
         public static void removeFeedCategory(string name) {
 
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\");
 
             foreach (var doc in filePaths) {
-                
-                XDocument xdoc = XDocument.Load(doc);
+                try
+                {
+                    XElement xdoc = XElement.Load(doc);
 
-                
+                    IEnumerable<XElement> categoryEdit =
+                     from el in xdoc.Elements("category")
+                     where (string)el.Attribute("name") == name
+                     select el;
+                    
+                    categoryEdit.FirstOrDefault().SetAttributeValue("name", name);
                     xdoc.Save(doc);
-                
-               
+                }
+                catch(Exception e) {
+                    throw e;
+                }
             }
            
 

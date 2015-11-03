@@ -32,11 +32,13 @@ namespace GUI
             InitializeComponent();
 
         }
-        // Event på en knapp som möjliggör att man kan spara ner en xml fil. Anropar en spara funktion i mainWindow.
+        // Event på en knapp som möjliggör att man kan spara ner eller editera  en xml fil. Anropar en spara funktion i mainWindow.
         private void btnSpara_Click(object sender, EventArgs e)
         {
             if (button == "edit")
             {
+                if (cbCategories.SelectedItem != null)
+                    category = cbCategories.SelectedItem.ToString();
                 mainForm.redigera(this);
                 this.Dispose();
             }

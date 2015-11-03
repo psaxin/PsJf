@@ -14,6 +14,7 @@ namespace Data
     public class Feed : Isave
     {
         private XDocument xDoc = new XDocument();
+        //Syftet med denna metod är att skapa och spara ner en xml fil
         public void save(string name, string path, string kat, string frek)
         {
             xDoc = XDocument.Load(path);

@@ -11,6 +11,7 @@ namespace Data
     */
     public interface Isave
     {
+        //Syftet med denna metod är att skapa och spara ner en xml fil
         void save(string name, string path, string kat, string frek);
     }
 }

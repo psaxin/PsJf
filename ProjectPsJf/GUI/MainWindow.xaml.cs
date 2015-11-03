@@ -125,27 +125,6 @@ namespace GUI
         // Metod för att spara ner två xml dokument, ett dokument som innehåller srcn till en podcast samt ett dokument som innehåller en "profil" där använder väljer uppdateringsintervall, kategori samt namn.
         public void addToListBox(saveWindow save)
         {
-
-            //if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbKat.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
-            //    validate.isLetters(save.tbNamn.Text) && validate.isLetters(save.tbKat.Text) && validate.isDigit(save.tbUppd.Text)
-            //    )
-            //{
-            //    String feed = "";
-            //    feed += save.tbNamn.Text;
-            //    feed += save.tbKat.Text;
-            //    feed += save.tbUppd.Text;
-            //    lwSavedFeeds.Items.Add(new SavedItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
-
-            //    Profile saveProfile = new Profile();
-            //    Feed saveFeed = new Feed();
-            //    saveProfile.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
-            //    saveFeed.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
-            //}
-
-            //else
-            //{
-            //    printStatusMessage("Vänliga fyll i alla fält med efterfrågad data");
-            //}
             if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
               validate.isLetters(save.tbNamn.Text)  && validate.isDigit(save.tbUppd.Text) && save.category != null
               )
@@ -345,7 +324,7 @@ namespace GUI
 
         }
         // Metod som fungerar som feedback till användaren.
-        public void printStatusMessage(string message)
+        public virtual void printStatusMessage(string message)
         {
 
             lbStatusMessages.Items.Add("<" + DateTime.Now.ToShortTimeString() + "> " + message);
@@ -427,20 +406,30 @@ namespace GUI
         // Metod som möjliggör ändring av kategori av en sparad feed.
         public void redigera(saveWindow save)
         {
-            XDocument xDocEdit = new XDocument();
-            string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
-            string oldPath = @"savedFeeds/" + chosenFile + ".XML";
-            string newPath;
-            xDocEdit = XDocument.Load(oldPath);
-            xDocEdit.Root.Element("Name").Value = save.tbNamn.Text;
-            xDocEdit.Root.Element("Path").Value = save.tbUrl.Text;
-            xDocEdit.Root.Element("Kat").Value = cbCategory.SelectedItem.ToString();
-            xDocEdit.Root.Element("Frek").Value = save.tbUppd.Text;
-            newPath = @"savedFeeds/" + save.tbNamn.Text + ".XML";
-            xDocEdit.Save(newPath);
-            File.Delete(oldPath);
-            File.Move(@"savedFeeds/src/" + chosenFile + ".XML", @"savedFeeds/src/" + save.tbNamn.Text + ".XML");
-            showSavedFeeds();
+            if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
+             validate.isLetters(save.tbNamn.Text) && validate.isDigit(save.tbUppd.Text) && save.category != null
+             )
+            {
+                XDocument xDocEdit = new XDocument();
+                string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
+                string oldPath = @"savedFeeds/" + chosenFile + ".XML";
+                string newPath;
+                xDocEdit = XDocument.Load(oldPath);
+                xDocEdit.Root.Element("Name").Value = save.tbNamn.Text;
+                xDocEdit.Root.Element("Path").Value = save.tbUrl.Text;
+                xDocEdit.Root.Element("Kat").Value = save.category;
+                xDocEdit.Root.Element("Frek").Value = save.tbUppd.Text;
+                newPath = @"savedFeeds/" + save.tbNamn.Text + ".XML";
+                xDocEdit.Save(newPath);
+                File.Delete(oldPath);
+                File.Move(@"savedFeeds/src/" + chosenFile + ".XML", @"savedFeeds/src/" + save.tbNamn.Text + ".XML");
+                showSavedFeeds();
+            }
+
+            else
+            {
+                printStatusMessage("Vänliga fyll i alla fält med efterfrågad data");
+            }
         }
         // Metod som möjliggör ändring av kategori av en sparad feed.
         private void btn_Redigera_Click_1(object sender, RoutedEventArgs e)
@@ -454,8 +443,7 @@ namespace GUI
         private void lwFeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             checkIfNull(lwSavedFeeds.SelectedItem);
-            //btn_Redigera.IsEnabled = true;
-            Console.WriteLine(sender.GetType());
+            
         }
         // Metod för att hämta en url från en textbox
         private void btn_getUrl_Click(object sender, RoutedEventArgs e)
@@ -481,14 +469,14 @@ namespace GUI
             if (selectedItem != null) { btn_Redigera.IsEnabled = true; }
             else { btn_Redigera.IsEnabled = false; }
         }
-
+        // event för att lägga till en kategori
         private void btnAddCategory_Click(object sender, RoutedEventArgs e)
         {
             addCategoryForm creatNewCategory = new addCategoryForm(this);
             creatNewCategory.Show();
 
         }
-
+        // event för att fill en cb
         public void fillCategory()
         {
             cbCategory.Items.Clear();
@@ -513,6 +501,7 @@ namespace GUI
 
             }
         }
+        // överlagrad metod, fyller en annan cb
         public void fillCategory(System.Windows.Forms.ComboBox cb)
         {
 
@@ -539,16 +528,16 @@ namespace GUI
             }
 
         }
-
+        // event för att kunna ta bort en kategori
         private void btnRemoveCategory_Click(object sender, RoutedEventArgs e)
         {
             HanteraRss.removeCategory(cbCategory.SelectedItem.ToString());
-            HanteraRss.removeFeedCategory(cbCategory.SelectedItem.ToString());
-            fillCategory();
+            //HanteraRss.removeFeedCategory(cbCategory.SelectedItem.ToString());
+            //HanteraRss.removeFeedCategory("komedi");
             showSavedFeeds();
-
+            fillCategory();
         }
-
+        // event för att kunna editera en kategori
         private void btnEditCategory_Click(object sender, RoutedEventArgs e)
         {
             addCategoryForm creatNewCategory = new addCategoryForm(cbCategory.SelectedItem.ToString(),this);

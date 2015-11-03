@@ -78,7 +78,7 @@
         <Label x:Name="lblSM" Content="Status Messages" HorizontalAlignment="Left" Margin="453,357,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbStatusMessages" HorizontalAlignment="Left" Height="128" Margin="453,383,0,0" VerticalAlignment="Top" Width="307"/>
         <Button x:Name="btn_Redigera" Content="Redigera" HorizontalAlignment="Left" Margin="653,217,0,0" VerticalAlignment="Top" Width="75" Click="btn_Redigera_Click_1" IsEnabled="False"/>
-        <ComboBox x:Name="cbCategory" HorizontalAlignment="Left" Margin="470,277,0,0" VerticalAlignment="Top" Width="166"/>
+        <ComboBox x:Name="cbCategory" HorizontalAlignment="Left" Margin="470,277,0,0" VerticalAlignment="Top" Width="166" IsEditable="True"/>
         <Label x:Name="lblCategory" Content="Kategorier" HorizontalAlignment="Left" Margin="465,246,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnAddCategory" Content="Skapa Ny" HorizontalAlignment="Left" Margin="470,304,0,0" VerticalAlignment="Top" Width="75" Click="btnAddCategory_Click"/>
         <Button x:Name="btnRemoveCategory" Content="Radera" HorizontalAlignment="Left" Margin="653,304,0,0" VerticalAlignment="Top" Width="75" Click="btnRemoveCategory_Click"/>

@@ -56,7 +56,7 @@ namespace GUI
         // Startar en ny tråd som ska som kör funktionen onTimedEvent varje minut.
         private void startUpdateThread()
         {
-            var timer = new System.Timers.Timer(6000);
+            var timer = new System.Timers.Timer(60000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
@@ -78,21 +78,17 @@ namespace GUI
             addCurrentToAll();
 
             string[] filePaths = Directory.GetFiles(@"savedFeeds\src\");
-            Console.WriteLine("Påbörjar " + itteration);
             string temp;
             FileStream fs;
             int theTime = time;
             for (int i = 0; i < filePaths.Length; i++)
             {
-
-
                 filepath = minTabell[i, 0];
                 url = HanteraRss.getURL(filepath);
                 temp = HanteraRss.ParseToString(url);
                
                 if (Int32.Parse(minTabell[i, 1]) == Int32.Parse(minTabell[i, 2]))
                 {
-                    Console.WriteLine("Ifen gick igenom på  " + itteration);
                     try
                     {
                         fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
@@ -110,20 +106,17 @@ namespace GUI
                     }
                     catch (FileNotFoundException x)
                     {
-
-                        Console.WriteLine("FileNotFoundException");
+                        throw x;
 
                     }
                     catch (IOException x)
                     {
-
-                        Console.WriteLine("IOException");
+                        throw x;
 
                     }
                     catch (Exception ege)
                     {
-
-                        Console.WriteLine("Exception");
+                        throw ege;
 
                     }
                     //otroligt viktig kodrad.  :)
