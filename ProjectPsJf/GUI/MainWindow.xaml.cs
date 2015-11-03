@@ -34,6 +34,7 @@ namespace GUI
             InitializeComponent();
             UpdateSavedFeeds updateThread = new UpdateSavedFeeds(this);
             showSavedFeeds();
+            fillCategory();
             asc = false;
 
         }
@@ -51,10 +52,8 @@ namespace GUI
         // Öppnar ett nytt fönster som används för att spara en profil
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-
             saveWindow saveWin = new saveWindow(tbUrl.Text, "save", this);
             saveWin.Show();
-
 
         }
         // Startar en ljudfil från en url i list Objekten
@@ -77,7 +76,7 @@ namespace GUI
 
             mediaPlayer.Stop();
         }
-       // Metod som visar hur lång tid en fil spelats.
+        // Metod som visar hur lång tid en fil spelats.
         void timer_Tick(object sender, EventArgs e)
         {
             if (mediaPlayer.Source != null)
@@ -88,7 +87,8 @@ namespace GUI
         // Metod skapad för att kunna spela upp en fil via dubbelklick på en lista, samt att "flaggar" i objektet att filen spelats.
         private void listViewDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (listViewDetails.SelectedItem != null){
+            if (listViewDetails.SelectedItem != null)
+            {
                 string chosenItemOwner = (listViewDetails.SelectedItem as ListItems).Stamp;
                 string chosenItemUrl = (listViewDetails.SelectedItem as ListItems).URL;
                 string itemTitle = (listViewDetails.SelectedItem as ListItems).Title;
@@ -113,7 +113,7 @@ namespace GUI
                 timer.Interval = TimeSpan.FromSeconds(1);
                 timer.Tick += timer_Tick;
                 timer.Start();
-            }           
+            }
             else
             {
                 mediaPlayer.Play();
@@ -126,20 +126,39 @@ namespace GUI
         public void addToListBox(saveWindow save)
         {
 
-            if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbKat.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
-                validate.isLetters(save.tbNamn.Text) && validate.isLetters(save.tbKat.Text) && validate.isDigit(save.tbUppd.Text)
-                )
+            //if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbKat.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
+            //    validate.isLetters(save.tbNamn.Text) && validate.isLetters(save.tbKat.Text) && validate.isDigit(save.tbUppd.Text)
+            //    )
+            //{
+            //    String feed = "";
+            //    feed += save.tbNamn.Text;
+            //    feed += save.tbKat.Text;
+            //    feed += save.tbUppd.Text;
+            //    lwSavedFeeds.Items.Add(new SavedItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
+
+            //    Profile saveProfile = new Profile();
+            //    Feed saveFeed = new Feed();
+            //    saveProfile.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
+            //    saveFeed.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
+            //}
+
+            //else
+            //{
+            //    printStatusMessage("Vänliga fyll i alla fält med efterfrågad data");
+            //}
+            if (validate.notNullOrEmpty(save.tbNamn.Text) && validate.notNullOrEmpty(save.tbNamn.Text) &&
+              validate.isLetters(save.tbNamn.Text)  && validate.isDigit(save.tbUppd.Text) && save.category != null
+              )
             {
                 String feed = "";
                 feed += save.tbNamn.Text;
-                feed += save.tbKat.Text;
                 feed += save.tbUppd.Text;
-                lwSavedFeeds.Items.Add(new SavedItems { Namn = save.tbNamn.Text, Kategori = save.tbKat.Text, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
+                lwSavedFeeds.Items.Add(new SavedItems { Namn = save.tbNamn.Text, Kategori = save.category, Frekvens = save.tbUppd.Text, Stamp = save.tbNamn.Text });
 
                 Profile saveProfile = new Profile();
                 Feed saveFeed = new Feed();
-                saveProfile.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
-                saveFeed.save(save.tbNamn.Text, tbUrl.Text, save.tbKat.Text, save.tbUppd.Text);
+                saveProfile.save(save.tbNamn.Text, tbUrl.Text, save.category, save.tbUppd.Text);
+                saveFeed.save(save.tbNamn.Text, tbUrl.Text, save.category, save.tbUppd.Text);
             }
 
             else
@@ -160,7 +179,7 @@ namespace GUI
                 //körs om den har en en annorlunda stamp
                 if ((listViewDetails.Items.GetItemAt(0) as ListItems).Stamp != fileStamp)
                 {
-                    fillFeedList(chosenFile,fileStamp,played);
+                    fillFeedList(chosenFile, fileStamp, played);
                 }
             }
             // körs den är tom
@@ -193,9 +212,10 @@ namespace GUI
 
         }
         // Anropas i updatefeed, den fill en lista med "feeds". Chosenfile är källan, filestamp används som markör för att se ifall listan redan hämtats. Playlist är en lista av alla sparade profiler.
-        private void fillFeedList(string chosenFile, string fileStamp, List<string> playlist) {
+        private void fillFeedList(string chosenFile, string fileStamp, List<string> playlist)
+        {
 
-            
+
             try
             {
                 listViewDetails.Items.Clear();
@@ -298,30 +318,10 @@ namespace GUI
             }
             catch
             {
-
                 printStatusMessage("Välj en fil att radera");
             }
-
-
-            try
-            {
-                if (File.Exists(path))
-                {
-                    Console.WriteLine("filen finns!!!");
-                    File.Delete(path);
-                    File.Delete(pathSrc);
-                    printStatusMessage("Raderade filen: " + path);
-                }
-                else
-                {
-                    Console.WriteLine("filen finns ej");
-                }
-            }
-            catch (Exception re)
-            {
-
-                Console.WriteLine(re);
-            }
+            HanteraRss.removeFile(path, pathSrc);
+            printStatusMessage("Raderade filen: " + path);
             fillListFromUrl();
             showSavedFeeds();
 
@@ -335,8 +335,9 @@ namespace GUI
         // Metod för att uppdatera listviewdetails med information från en sparad feed ifrån en vald profil.
         private void lwFeed_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
         {
-          
-            if (lwSavedFeeds.SelectedItem != null) {
+
+            if (lwSavedFeeds.SelectedItem != null)
+            {
                 string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
                 string fileStamp = (lwSavedFeeds.SelectedItem as ListItems).Stamp;
                 updateFeed(@"savedFeeds/src/" + chosenFile + ".xml", fileStamp);
@@ -428,14 +429,17 @@ namespace GUI
         {
             XDocument xDocEdit = new XDocument();
             string chosenFile = (lwSavedFeeds.SelectedItem as ListItems).Namn;
-            string path = @"savedFeeds/" + chosenFile + ".XML";
-            Console.WriteLine(path);
-            xDocEdit = XDocument.Load(path);
+            string oldPath = @"savedFeeds/" + chosenFile + ".XML";
+            string newPath;
+            xDocEdit = XDocument.Load(oldPath);
             xDocEdit.Root.Element("Name").Value = save.tbNamn.Text;
             xDocEdit.Root.Element("Path").Value = save.tbUrl.Text;
-            xDocEdit.Root.Element("Kat").Value = save.tbKat.Text;
+            xDocEdit.Root.Element("Kat").Value = cbCategory.SelectedItem.ToString();
             xDocEdit.Root.Element("Frek").Value = save.tbUppd.Text;
-            xDocEdit.Save(path);
+            newPath = @"savedFeeds/" + save.tbNamn.Text + ".XML";
+            xDocEdit.Save(newPath);
+            File.Delete(oldPath);
+            File.Move(@"savedFeeds/src/" + chosenFile + ".XML", @"savedFeeds/src/" + save.tbNamn.Text + ".XML");
             showSavedFeeds();
         }
         // Metod som möjliggör ändring av kategori av en sparad feed.
@@ -449,9 +453,9 @@ namespace GUI
         // Metod som kontrollerar att en sparad feed blivit markerad.
         private void lwFeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-            btn_Redigera.IsEnabled = true;
-
+            checkIfNull(lwSavedFeeds.SelectedItem);
+            //btn_Redigera.IsEnabled = true;
+            Console.WriteLine(sender.GetType());
         }
         // Metod för att hämta en url från en textbox
         private void btn_getUrl_Click(object sender, RoutedEventArgs e)
@@ -471,9 +475,88 @@ namespace GUI
                 btn_getUrl.IsEnabled = true;
             }
         }
+        //Kontrollerar om ett ListItems är valt, om inte så döljs knappen för att redigera och vice versa
+        private void checkIfNull(object selectedItem)
+        {
+            if (selectedItem != null) { btn_Redigera.IsEnabled = true; }
+            else { btn_Redigera.IsEnabled = false; }
+        }
+
+        private void btnAddCategory_Click(object sender, RoutedEventArgs e)
+        {
+            addCategoryForm creatNewCategory = new addCategoryForm(this);
+            creatNewCategory.Show();
+
+        }
+
+        public void fillCategory()
+        {
+            cbCategory.Items.Clear();
+            try
+            {
+                XElement po = XElement.Load(@"savedFeeds/cat/cat.xml");
+                IEnumerable<XElement> childElements =
+                    from el in po.Elements()
+                    select el;
+
+                foreach (XElement element in childElements)
+                {
+                    cbCategory.Items.Add(element.FirstAttribute.Value);
+
+                }
+                
+            }
+
+            catch (Exception e)
+            {
+                throw e;
+
+            }
+        }
+        public void fillCategory(System.Windows.Forms.ComboBox cb)
+        {
+
+            cb.Items.Clear();
+            try
+            {
+                XElement po = XElement.Load(@"savedFeeds/cat/cat.xml");
+                IEnumerable<XElement> childElements =
+                    from el in po.Elements()
+                    select el;
+
+                foreach (XElement element in childElements)
+                {
+                    cb.Items.Add(element.FirstAttribute.Value);
+
+                }
+
+            }
+
+            catch (Exception e)
+            {
+                throw e;
+
+            }
+
+        }
+
+        private void btnRemoveCategory_Click(object sender, RoutedEventArgs e)
+        {
+            HanteraRss.removeCategory(cbCategory.SelectedItem.ToString());
+            HanteraRss.removeFeedCategory(cbCategory.SelectedItem.ToString());
+            fillCategory();
+            showSavedFeeds();
+
+        }
+
+        private void btnEditCategory_Click(object sender, RoutedEventArgs e)
+        {
+            addCategoryForm creatNewCategory = new addCategoryForm(cbCategory.SelectedItem.ToString(),this);
+            creatNewCategory.Show();
+        }
+
     }
 }
-
 
 
 

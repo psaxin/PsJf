@@ -11,7 +11,7 @@
         <Label x:Name="lblUrl" Content="Ange URL:" HorizontalAlignment="Left" Margin="21,25,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btn_getUrl" Content="Hämta" HorizontalAlignment="Left" Margin="373,29,0,0" VerticalAlignment="Top" Width="75" Click="btn_getUrl_Click"/>
         <TextBox x:Name="tbUrl" HorizontalAlignment="Left" Height="23" Margin="91,28,0,0" TextWrapping="Wrap" Text="http://tackforkaffet.libsyn.com/rss" VerticalAlignment="Top" Width="264" KeyUp="tbUrl_KeyUp" />
-        <Label x:Name="lblSavedFeeds" Content="Sparade Feeds" HorizontalAlignment="Left" Margin="470,31,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblSavedFeeds" Content="Sparade Feeds" HorizontalAlignment="Left" Margin="470,28,0,0" VerticalAlignment="Top"/>
         <ListView x:Name="listViewDetails" HorizontalAlignment="Left" Height="301" Margin="21,54,0,0" VerticalAlignment="Top" Width="427" MouseDoubleClick="listViewDetails_MouseDoubleClick" SelectionChanged="listViewDetails_SelectionChanged">
             <ListView.View>
                 <GridView>
@@ -43,7 +43,7 @@
             </ListView.View>
         </ListView>
 
-        <Button x:Name="btnSave" Content="Spara" HorizontalAlignment="Left" Margin="470,226,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click"/>
+        <Button x:Name="btnSave" Content="Spara" HorizontalAlignment="Left" Margin="470,217,0,0" VerticalAlignment="Top" Width="75" Click="btnSave_Click"/>
         <Rectangle x:Name="mediaBg" HorizontalAlignment="Left" Height="128" Margin="21,383,0,0" Stroke="Black" VerticalAlignment="Top" Width="427" Fill="#FF6A8DB8"/>
         <Label x:Name="lblMediaPlayer" Content="Podcast Spelare" HorizontalAlignment="Left" Margin="21,360,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnPlay" Content="Spela" HorizontalAlignment="Left" Margin="58,476,0,0" VerticalAlignment="Top" Width="75" Click="btnPlay_Click" IsEnabled="False"/>
@@ -51,7 +51,7 @@
         <Button x:Name="btnStop" Content="Stopp" HorizontalAlignment="Left" Margin="246,476,0,0" VerticalAlignment="Top" Width="75" Click="btnStop_Click"/>
         <Label x:Name="lblStatus" Content="Tid:" HorizontalAlignment="Left" Margin="91,418,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblFileName" Content="//  dubbel klicka på en pod för att spela" HorizontalAlignment="Left" Margin="91,392,0,0" VerticalAlignment="Top"/>
-        <ListView x:Name="lwSavedFeeds" VirtualizingStackPanel.IsVirtualizing="True" HorizontalAlignment="Left" Height="158" Margin="470,60,0,0" VerticalAlignment="Top" Width="267" MouseDoubleClick="lwFeed_MouseDoubleClick_1" SelectionChanged="lwFeed_SelectionChanged">
+        <ListView x:Name="lwSavedFeeds" VirtualizingStackPanel.IsVirtualizing="True" HorizontalAlignment="Left" Height="158" Margin="453,54,0,0" VerticalAlignment="Top" Width="307" MouseDoubleClick="lwFeed_MouseDoubleClick_1" SelectionChanged="lwFeed_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Namn}">
@@ -74,9 +74,14 @@
         </ListView>
         <Slider x:Name="slider" HorizontalAlignment="Left" Margin="357,476,0,0" VerticalAlignment="Top" Height="20" Width="75" Maximum="100" ValueChanged="slider_ValueChanged_1" Value="50"/>
         <Label x:Name="lblVolym" Content="Volym" HorizontalAlignment="Left" Margin="373,444,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnRemove" Content="Radera" HorizontalAlignment="Left" Margin="564,226,0,0" VerticalAlignment="Top" Width="75" Click="btnRemove_Click"/>
-        <Label x:Name="lblSM" Content="Status Messages" HorizontalAlignment="Left" Margin="470,352,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnRemove" Content="Radera" HorizontalAlignment="Left" Margin="561,217,0,0" VerticalAlignment="Top" Width="75" Click="btnRemove_Click"/>
+        <Label x:Name="lblSM" Content="Status Messages" HorizontalAlignment="Left" Margin="453,357,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbStatusMessages" HorizontalAlignment="Left" Height="128" Margin="453,383,0,0" VerticalAlignment="Top" Width="307"/>
-        <Button x:Name="btn_Redigera" Content="Redigera" HorizontalAlignment="Left" Margin="662,226,0,0" VerticalAlignment="Top" Width="75" Click="btn_Redigera_Click_1" IsEnabled="False"/>
+        <Button x:Name="btn_Redigera" Content="Redigera" HorizontalAlignment="Left" Margin="653,217,0,0" VerticalAlignment="Top" Width="75" Click="btn_Redigera_Click_1" IsEnabled="False"/>
+        <ComboBox x:Name="cbCategory" HorizontalAlignment="Left" Margin="470,277,0,0" VerticalAlignment="Top" Width="166"/>
+        <Label x:Name="lblCategory" Content="Kategorier" HorizontalAlignment="Left" Margin="465,246,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnAddCategory" Content="Skapa Ny" HorizontalAlignment="Left" Margin="470,304,0,0" VerticalAlignment="Top" Width="75" Click="btnAddCategory_Click"/>
+        <Button x:Name="btnRemoveCategory" Content="Radera" HorizontalAlignment="Left" Margin="653,304,0,0" VerticalAlignment="Top" Width="75" Click="btnRemoveCategory_Click"/>
+        <Button x:Name="btnEditCategory" Content="Ändra" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="561,304,0,0" Click="btnEditCategory_Click"/>
     </Grid>
 </Window>

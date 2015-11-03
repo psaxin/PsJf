@@ -13,6 +13,7 @@ namespace GUI
 {
     public partial class saveWindow : Form
     {
+        public string category;
         private MainWindow mainForm;
         private static string button;
         //  En overloaded konstruktor som först tar två parametrar sedan anropar default konstruktorn som bygger formen. Tar ett objekt av klassen MainWindow för att kunna använda dess metoder.
@@ -21,6 +22,7 @@ namespace GUI
             button = whichButton;
             mainForm = main;
             tbUrl.Text = url;
+            mainForm.fillCategory(cbCategories);
 
         }
         //  Standard konstruktor som bygger klassen.
@@ -41,17 +43,13 @@ namespace GUI
 
             else
             {
+                if(cbCategories.SelectedItem != null)
+                category = cbCategories.SelectedItem.ToString();
+
                 mainForm.addToListBox(this);
                 this.Dispose();
             }
-
-
         }
-        // Event på en knapp som möjliggör att man kan ändra kategori på en sparad feed.
-        private void btn_Redigera_Click(object sender, EventArgs e)
-        {
 
-
-        }
     }
 }
