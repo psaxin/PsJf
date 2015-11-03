@@ -38,12 +38,13 @@
             this.btnSpara = new System.Windows.Forms.Button();
             this.tbNamn = new System.Windows.Forms.TextBox();
             this.lblUrl = new System.Windows.Forms.Label();
+            this.tbUrl = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lblNamn
             // 
             this.lblNamn.AutoSize = true;
-            this.lblNamn.Location = new System.Drawing.Point(23, 43);
+            this.lblNamn.Location = new System.Drawing.Point(23, 72);
             this.lblNamn.Name = "lblNamn";
             this.lblNamn.Size = new System.Drawing.Size(35, 13);
             this.lblNamn.TabIndex = 2;
@@ -52,7 +53,7 @@
             // tbKat
             // 
             this.tbKat.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tbKat.Location = new System.Drawing.Point(26, 98);
+            this.tbKat.Location = new System.Drawing.Point(26, 127);
             this.tbKat.MaxLength = 15;
             this.tbKat.Name = "tbKat";
             this.tbKat.Size = new System.Drawing.Size(100, 20);
@@ -61,7 +62,7 @@
             // lblKat
             // 
             this.lblKat.AutoSize = true;
-            this.lblKat.Location = new System.Drawing.Point(23, 82);
+            this.lblKat.Location = new System.Drawing.Point(23, 111);
             this.lblKat.Name = "lblKat";
             this.lblKat.Size = new System.Drawing.Size(46, 13);
             this.lblKat.TabIndex = 4;
@@ -69,7 +70,7 @@
             // 
             // tbUppd
             // 
-            this.tbUppd.Location = new System.Drawing.Point(26, 137);
+            this.tbUppd.Location = new System.Drawing.Point(26, 166);
             this.tbUppd.MaxLength = 4;
             this.tbUppd.Name = "tbUppd";
             this.tbUppd.Size = new System.Drawing.Size(100, 20);
@@ -78,7 +79,7 @@
             // lblUppd
             // 
             this.lblUppd.AutoSize = true;
-            this.lblUppd.Location = new System.Drawing.Point(23, 121);
+            this.lblUppd.Location = new System.Drawing.Point(23, 150);
             this.lblUppd.Name = "lblUppd";
             this.lblUppd.Size = new System.Drawing.Size(106, 13);
             this.lblUppd.TabIndex = 6;
@@ -87,7 +88,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(144, 140);
+            this.label9.Location = new System.Drawing.Point(132, 173);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(74, 13);
             this.label9.TabIndex = 8;
@@ -95,7 +96,7 @@
             // 
             // btnSpara
             // 
-            this.btnSpara.Location = new System.Drawing.Point(26, 179);
+            this.btnSpara.Location = new System.Drawing.Point(26, 192);
             this.btnSpara.Name = "btnSpara";
             this.btnSpara.Size = new System.Drawing.Size(75, 23);
             this.btnSpara.TabIndex = 3;
@@ -105,7 +106,7 @@
             // 
             // tbNamn
             // 
-            this.tbNamn.Location = new System.Drawing.Point(26, 59);
+            this.tbNamn.Location = new System.Drawing.Point(26, 88);
             this.tbNamn.MaxLength = 15;
             this.tbNamn.Name = "tbNamn";
             this.tbNamn.Size = new System.Drawing.Size(100, 20);
@@ -114,15 +115,23 @@
             // lblUrl
             // 
             this.lblUrl.AutoSize = true;
-            this.lblUrl.Location = new System.Drawing.Point(23, 21);
+            this.lblUrl.Location = new System.Drawing.Point(23, 33);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(32, 13);
+            this.lblUrl.Size = new System.Drawing.Size(29, 13);
             this.lblUrl.TabIndex = 0;
-            this.lblUrl.Text = "URL;";
+            this.lblUrl.Text = "URL";
+            // 
+            // tbUrl
+            // 
+            this.tbUrl.Location = new System.Drawing.Point(26, 49);
+            this.tbUrl.Name = "tbUrl";
+            this.tbUrl.Size = new System.Drawing.Size(215, 20);
+            this.tbUrl.TabIndex = 9;
             // 
             // saveWindow
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.tbUrl);
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.tbNamn);
             this.Controls.Add(this.btnSpara);
@@ -151,5 +160,6 @@
         private System.Windows.Forms.Button btnSpara;
         public System.Windows.Forms.TextBox tbNamn;
         private System.Windows.Forms.Label lblUrl;
+        public System.Windows.Forms.TextBox tbUrl;
     }
 }

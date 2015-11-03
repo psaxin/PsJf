@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -117,17 +118,16 @@ namespace Logic
         // ID representerar alltså de spelade filerna
         public static List<string> getPlayed(string fileName)
         {
-
-            rssXmlDoc.Load(fileName);
-            XmlNodeList playedIdNodes = rssXmlDoc.SelectNodes("body/Played/ID");
             List<string> playedList = new List<string>();
-
-            foreach (XmlNode ID in playedIdNodes)
-            {
-                playedList.Add(ID.InnerText);
+            if (validate.IsValidFeedUrl(fileName)) { 
+                rssXmlDoc.Load(fileName);
+                XmlNodeList playedIdNodes = rssXmlDoc.SelectNodes("body/Played/ID");
+                foreach (XmlNode ID in playedIdNodes)
+                {
+                    playedList.Add(ID.InnerText);
+                }
             }
             return playedList;
-
         }
         //Denna metod tar emot en lista som den ska söka igenom och en string som är värdet den ska leta efter
         //returnar true om "itemToCheck" finns i listan "played", annars false.

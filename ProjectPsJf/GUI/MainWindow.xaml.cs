@@ -29,7 +29,6 @@ namespace GUI
         DispatcherTimer timer = new DispatcherTimer();
         List<ListItems> items;
         public Boolean asc;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -53,7 +52,7 @@ namespace GUI
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
 
-            saveWindow saveWin = new saveWindow(tbUrl.Text, this);
+            saveWindow saveWin = new saveWindow(tbUrl.Text, "save", this);
             saveWin.Show();
 
 
@@ -196,6 +195,7 @@ namespace GUI
         // Anropas i updatefeed, den fill en lista med "feeds". Chosenfile är källan, filestamp används som markör för att se ifall listan redan hämtats. Playlist är en lista av alla sparade profiler.
         private void fillFeedList(string chosenFile, string fileStamp, List<string> playlist) {
 
+            
             try
             {
                 listViewDetails.Items.Clear();
@@ -229,6 +229,11 @@ namespace GUI
             {
                 MessageBox.Show("URL fungerade ej");
 
+            }
+
+            catch (FileNotFoundException)
+            {
+                printStatusMessage("Den URL som du angivit är felaktig");
             }
 
         }
@@ -317,6 +322,7 @@ namespace GUI
 
                 Console.WriteLine(re);
             }
+            fillListFromUrl();
             showSavedFeeds();
 
         }
@@ -425,7 +431,10 @@ namespace GUI
             string path = @"savedFeeds/" + chosenFile + ".XML";
             Console.WriteLine(path);
             xDocEdit = XDocument.Load(path);
+            xDocEdit.Root.Element("Name").Value = save.tbNamn.Text;
+            xDocEdit.Root.Element("Path").Value = save.tbUrl.Text;
             xDocEdit.Root.Element("Kat").Value = save.tbKat.Text;
+            xDocEdit.Root.Element("Frek").Value = save.tbUppd.Text;
             xDocEdit.Save(path);
             showSavedFeeds();
         }
@@ -433,10 +442,8 @@ namespace GUI
         private void btn_Redigera_Click_1(object sender, RoutedEventArgs e)
         {
 
-            saveWindow saveWin = new saveWindow(tbUrl.Text, this);
+            saveWindow saveWin = new saveWindow(tbUrl.Text, "edit", this);
             saveWin.Show();
-            saveWin.tbNamn.Enabled = false;
-            saveWin.tbUppd.Enabled = false;
 
         }
         // Metod som kontrollerar att en sparad feed blivit markerad.

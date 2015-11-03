@@ -56,7 +56,7 @@ namespace GUI
         // Startar en ny tråd som ska som kör funktionen onTimedEvent varje minut.
         private void startUpdateThread()
         {
-            var timer = new System.Timers.Timer(60000);
+            var timer = new System.Timers.Timer(6000);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Enabled = true;
         }
@@ -130,8 +130,8 @@ namespace GUI
                     minTabell[i, 2] = "0";
                 }
 
-
             }
+
 
         }
         // Syftet med metoden är att ge alla objekt i den statiska arrayn ett inkrement. Detta inkrement jämnförs mot det angivna frekvensen. Den ska alltså immitera ett tidtagare.
@@ -159,7 +159,6 @@ namespace GUI
             }
 
         }
-
         // fyller alla listor i minTabell med index 2, med en frekvens
         private void collectFrek()
         {
